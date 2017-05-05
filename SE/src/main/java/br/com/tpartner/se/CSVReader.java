@@ -5,6 +5,9 @@
  */
 package br.com.tpartner.se;
 
+import br.com.tpartner.model.se.Action;
+import br.com.tpartner.model.se.Student;
+import br.com.tpartner.repository.interfaces.se.StudentRepositoryInterface;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -59,8 +62,9 @@ public class CSVReader {
     }
     
     private void createActions(List<List<String>> csvMatrix) throws ParseException{
+        Student student = null;
         for (List<String> line : csvMatrix) {
-            /* needs to identify the user to assign the action */
+            StudentRepository
             Action action = getAction(line);
         }
     }
