@@ -27,7 +27,7 @@ public class ActionRepository extends GenericHibernateRepository<Action, Long> i
     @Override
     public List<Action> findActionsByStudent(Student student) {
         ActionRepository actionRepository = new ActionRepository(this.getSession());
-        List<SessionA> studendSessionsA = student.getSessions();
+        List<SessionA> studendSessionsA = student.getSessionsA();
         List<Action> studentActions = null;
         for (SessionA studentSessionA : studendSessionsA){
             boolean addAll = studentActions.addAll(studentSessionA.getActions());

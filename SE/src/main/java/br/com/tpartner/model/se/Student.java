@@ -23,7 +23,7 @@ public class Student implements Serializable {
     @Id
     private String studentId;
     @OneToMany
-    private List<SessionA> sessions;
+    private List<SessionA> sessionsA;
     
     public Student(){
     }
@@ -41,12 +41,12 @@ public class Student implements Serializable {
         this.studentId = studentId;
     }
 
-    public List<SessionA> getSessions() {
-        return sessions;
+    public List<SessionA> getSessionsA() {
+        return sessionsA;
     }
 
-    public void setSessions(List<SessionA> sessions) {
-        this.sessions = sessions;
+    public void setSessionsA(List<SessionA> sessionsA) {
+        this.sessionsA = sessionsA;
     }
     
 }
