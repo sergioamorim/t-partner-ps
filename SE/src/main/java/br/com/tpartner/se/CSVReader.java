@@ -6,8 +6,9 @@
 package br.com.tpartner.se;
 
 import br.com.tpartner.model.se.Action;
+import br.com.tpartner.model.se.SessionA;
 import br.com.tpartner.model.se.Student;
-import br.com.tpartner.repository.interfaces.se.StudentRepositoryInterface;
+import br.com.tpartner.repository.classes.se.StudentRepository;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +19,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,8 +32,11 @@ public class CSVReader {
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("/home/sergio/Downloads/logs.csv", ";", "iso-8859-1");
-        
+        csvMatrix = reader.getMatrix("C:\\Users\\sergi\\Downloads\\logs.csv", ";", "iso-8859-1");
+        reader.createStudents(csvMatrix);
+        reader.createSessionsA(csvMatrix);
+        reader.createActions(csvMatrix);
+        System.out.println("OK");
     }
 
     private SimpleDateFormat getTimestampType(String timeString){
@@ -47,12 +50,16 @@ public class CSVReader {
         return dateFormat;
     }
     
+    private Date getDateTime(List<String> line) throws ParseException {
+        SimpleDateFormat dateFormat = getTimestampType(line.get(2));
+        Date dateTime = dateFormat.parse(line.get(2));
+        return dateTime;
+    }
+    
     private Action getAction(List<String> line) throws ParseException{
-        String timeString = line.get(2);
-        DateFormat dateFormat = getTimestampType(timeString);
-        Date time = dateFormat.parse(timeString);
+        Date dateTime = getDateTime(line);
         Action action;
-        action = new Action(time, line.get(1), line.get(3), line.get(4), 
+        action = new Action(dateTime, line.get(1), line.get(3), line.get(4), 
                 line.get(5), line.get(6), line.get(7), line.get(8), 
                 line.get(9), line.get(10), line.get(11), line.get(12),
                 line.get(13), line.get(14), line.get(15), line.get(16),
@@ -61,11 +68,77 @@ public class CSVReader {
         return action;
     }
     
-    private void createActions(List<List<String>> csvMatrix) throws ParseException{
-        Student student = null;
+    private Student getStudent(List<String> line) {
+        StudentRepository studentRepository = new StudentRepository();
+        Student student;
+        try {
+            student = studentRepository.findById(line.get(0));
+        }
+        catch (Exception e) {
+            student = new Student(line.get(0));
+        }
+        return student;
+    }
+    
+    private SessionA getSessionA(List<String> line) throws ParseException {
+        Student student = getStudent(line);
+        Date dateTime = getDateTime(line);
+        List<SessionA> sessionsA = student.getSessionsA();
+        return getNearestSessionA(sessionsA, dateTime);
+    }
+    
+    
+    private void createStudents(List<List<String>> csvMatrix) {
         for (List<String> line : csvMatrix) {
-            StudentRepository
-            Action action = getAction(line);
+            getStudent(line);
+        }
+    }
+    
+    private void createSessionsA(List<List<String>> csvMatrix) throws ParseException {
+        for (List<String> line : csvMatrix) {
+            if (line.get(1).contains("USER_SESSION")) {
+                Student student = getStudent(line);
+                List<SessionA> sessionsA = student.getSessionsA();
+                SessionA sessionA = new SessionA(getDateTime(line));
+                if (!sessionsA.isEmpty()) {
+                    if (!sessionsA.contains(sessionA)) {
+                        sessionsA.add(sessionA);
+                        student.setSessionsA(sessionsA);
+                    }
+                }
+                else {
+                    sessionsA.add(sessionA);
+                    student.setSessionsA(sessionsA);
+                }
+            }
+        }
+    }
+    
+    private SessionA getNearestSessionA(List<SessionA> sessionsA, Date dateTime) {
+        SessionA nearestSessionA = null;
+        Integer nearestComparation = Integer.MAX_VALUE;
+        for (SessionA sessionA : sessionsA) {
+            if (sessionA.getTimeStart().compareTo(dateTime) >= 0) {
+                if (sessionA.getTimeStart().compareTo(dateTime) < nearestComparation) {
+                    nearestComparation = sessionA.getTimeStart().compareTo(dateTime);
+                    nearestSessionA = sessionA;
+                }
+            }
+        }
+        return nearestSessionA;
+    }
+    
+    private void createActions(List<List<String>> csvMatrix) throws ParseException{
+        for (List<String> line : csvMatrix) {
+            if (!line.get(1).contains("USER_SESSION")) {
+                SessionA sessionA = getSessionA(line);
+                Action action = getAction(line);
+                if (!sessionA.getActions().contains(action)) {
+                    List<Action> actions = sessionA.getActions();
+                    actions.add(action);
+                    sessionA.setActions(actions);
+                }
+            }
         }
     }
     
