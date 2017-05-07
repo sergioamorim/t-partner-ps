@@ -100,13 +100,7 @@ public class CSVReader {
                 Student student = getStudent(line);
                 List<SessionA> sessionsA = student.getSessionsA();
                 SessionA sessionA = new SessionA(getDateTime(line));
-                if (!sessionsA.isEmpty()) {
-                    if (!sessionsA.contains(sessionA)) {
-                        sessionsA.add(sessionA);
-                        student.setSessionsA(sessionsA);
-                    }
-                }
-                else {
+                if (!sessionsA.contains(sessionA)) {
                     sessionsA.add(sessionA);
                     student.setSessionsA(sessionsA);
                 }
@@ -130,7 +124,7 @@ public class CSVReader {
     
     private void createActions(List<List<String>> csvMatrix) throws ParseException{
         for (List<String> line : csvMatrix) {
-            if (!line.get(1).contains("USER_SESSION")) {
+            if (!line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
                 SessionA sessionA = getSessionA(line);
                 Action action = getAction(line);
                 if (!sessionA.getActions().contains(action)) {
