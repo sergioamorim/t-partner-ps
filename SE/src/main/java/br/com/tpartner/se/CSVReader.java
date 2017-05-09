@@ -5,10 +5,10 @@
  */
 package br.com.tpartner.se;
 
-import br.com.tpartner.model.se.Action;
-import br.com.tpartner.model.se.SessionA;
-import br.com.tpartner.model.se.Student;
-import br.com.tpartner.repository.classes.se.StudentRepository;
+import br.com.tpartner.persistence.crud.implementation.StudentCRUDImplementation;
+import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.persistence.model.Action;
+import br.com.tpartner.persistence.model.Student;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -69,10 +69,10 @@ public class CSVReader {
     }
     
     private Student getStudent(List<String> line) {
-        StudentRepository studentRepository = new StudentRepository();
+        StudentCRUDImplementation studentCRUDImplementation = new StudentCRUDImplementation();
         Student student;
         try {
-            student = studentRepository.findById(line.get(0));
+            student = studentCRUDImplementation.findByStudentIdString(line.get(0));
         }
         catch (Exception e) {
             student = new Student(line.get(0));
@@ -80,11 +80,11 @@ public class CSVReader {
         return student;
     }
     
-    private SessionA getSessionA(List<String> line) throws ParseException {
+    private AccessSession getAccessSession(List<String> line) throws ParseException {
         Student student = getStudent(line);
         Date dateTime = getDateTime(line);
-        List<SessionA> sessionsA = student.getSessionsA();
-        return getNearestSessionA(sessionsA, dateTime);
+        List<AccessSession> accessSessions = student.getAccessSessions();
+        return getNearestAccessSession(accessSessions, dateTime);
     }
     
     
@@ -98,39 +98,39 @@ public class CSVReader {
         for (List<String> line : csvMatrix) {
             if (line.get(1).contains("USER_SESSION")) {
                 Student student = getStudent(line);
-                List<SessionA> sessionsA = student.getSessionsA();
-                SessionA sessionA = new SessionA(getDateTime(line));
-                if (!sessionsA.contains(sessionA)) {
-                    sessionsA.add(sessionA);
-                    student.setSessionsA(sessionsA);
+                List<AccessSession> sessionsA = student.getAccessSessions();
+                AccessSession accessSession = new AccessSession(getDateTime(line));
+                if (!sessionsA.contains(accessSession)) {
+                    sessionsA.add(accessSession);
+                    student.setAccessSessions(sessionsA);
                 }
             }
         }
     }
     
-    private SessionA getNearestSessionA(List<SessionA> sessionsA, Date dateTime) {
-        SessionA nearestSessionA = null;
+    private AccessSession getNearestAccessSession(List<AccessSession> sessionsA, Date dateTime) {
+        AccessSession nearestAccessSession = null;
         Integer nearestComparation = Integer.MAX_VALUE;
-        for (SessionA sessionA : sessionsA) {
-            if (sessionA.getTimeStart().compareTo(dateTime) >= 0) {
-                if (sessionA.getTimeStart().compareTo(dateTime) < nearestComparation) {
-                    nearestComparation = sessionA.getTimeStart().compareTo(dateTime);
-                    nearestSessionA = sessionA;
+        for (AccessSession accessSession : sessionsA) {
+            if (accessSession.getTimeStart().compareTo(dateTime) >= 0) {
+                if (accessSession.getTimeStart().compareTo(dateTime) < nearestComparation) {
+                    nearestComparation = accessSession.getTimeStart().compareTo(dateTime);
+                    nearestAccessSession = accessSession;
                 }
             }
         }
-        return nearestSessionA;
+        return nearestAccessSession;
     }
     
     private void createActions(List<List<String>> csvMatrix) throws ParseException{
         for (List<String> line : csvMatrix) {
             if (!line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
-                SessionA sessionA = getSessionA(line);
+                AccessSession accessSession = getAccessSession(line);
                 Action action = getAction(line);
-                if (!sessionA.getActions().contains(action)) {
-                    List<Action> actions = sessionA.getActions();
+                if (!accessSession.getActions().contains(action)) {
+                    List<Action> actions = accessSession.getActions();
                     actions.add(action);
-                    sessionA.setActions(actions);
+                    accessSession.setActions(actions);
                 }
             }
         }
