@@ -31,12 +31,8 @@ public class StudentController implements StudentFacade {
         this.studentCRUD.delete(student);
     }
 
-    public Student findById(int studentId) {
+    public Student findById(Long studentId) {
         return this.studentCRUD.findById(studentId);
-    }
-    
-    public Student findByIdString(String studentIdString) {
-        return this.studentCRUD.findByIdString(studentIdString);
     }
 
     public List<Student> findAll() {

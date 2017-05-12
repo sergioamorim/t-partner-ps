@@ -18,7 +18,6 @@ public interface StudentFacade {
     public Student update(Student student);
     public void delete(Student student);
     /* Aux */
-    public Student findById(int studentId);
-    public Student findByIdString(String studentIdString);
+    public Student findById(Long studentId);
     public List<Student> findAll();
 }

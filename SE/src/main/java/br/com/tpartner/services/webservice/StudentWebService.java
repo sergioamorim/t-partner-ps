@@ -43,20 +43,14 @@ public class StudentWebService {
     }
     
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Integer id) {
+    public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Long id) {
         this.studentFacade.delete(this.studentFacade.findById(id));
         return new ResponseEntity<Serializable>(serviceType+": Student deletado com sucesso!",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Integer id) {
+    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Long id) {
         Student a = this.studentFacade.findById(id);
-        return new ResponseEntity<Serializable>(a,HttpStatus.OK);
-    }    
-    
-    @RequestMapping(value = "/id", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> findByIdString(@RequestParam(value = "student_id_string", required = true) String studentIdString) {
-        Student a = this.studentFacade.findByIdString(studentIdString);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }    
 

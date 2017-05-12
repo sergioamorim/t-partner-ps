@@ -61,7 +61,7 @@ public class StudentCRUDImplementation implements StudentCRUD {
     }
 
     @Override
-    public Student findById(int studentId) {
+    public Student findById(Long studentId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(Student.class);
         createCriteria.add(Restrictions.eq("id", studentId));
@@ -79,14 +79,4 @@ public class StudentCRUDImplementation implements StudentCRUD {
         return students;
     }
     
-    @Override
-    public Student findByIdString(String studentIdString) {
-        Session session = getCurrentSession();
-        Criteria createCriteria = session.createCriteria(Student.class);
-        createCriteria.add(Restrictions.eq("studentIdString", studentIdString));
-        Student student = (Student) createCriteria.uniqueResult();
-        System.out.println(createCriteria.toString());
-        session.close();
-        return student;
-    }
 }

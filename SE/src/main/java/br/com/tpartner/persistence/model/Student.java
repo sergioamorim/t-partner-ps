@@ -6,11 +6,13 @@
 package br.com.tpartner.persistence.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -25,40 +27,40 @@ public class Student implements Serializable {
     @SequenceGenerator(name = "student_id_seq", initialValue = 1,
             allocationSize = 1, sequenceName = "student_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_seq")
-    private Integer id;
+    private Long id;
     
-    @Column(name = "student_id_string")
-    private String studentIdString;
+    @OneToMany(mappedBy="student", cascade = CascadeType.ALL)
+    private List<AccessSession> accessSessions;
     
     public Student(){
     }
     
-    public Student(String studentIdString){
-        this.studentIdString = studentIdString;
-    }
-    
-    public Integer getStudentId() {
-        return id;
-    }
-    
-    public void setStudentId(Integer id) {
+    public Student(Long id){
         this.id = id;
     }
     
-    public String getStudentIdString() {
-        return studentIdString;
+    public Long getStudentId() {
+        return id;
+    }
+    
+    public void setStudentId(Long id) {
+        this.id = id;
     }
 
-    public void setStudentIdString(String studentIdString) {
-        this.studentIdString = studentIdString;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public List<AccessSession> getAccessSessions() {
+        return accessSessions;
+    }
+
+    public void setAccessSessions(List<AccessSession> accessSessions) {
+        this.accessSessions = accessSessions;
     }
     
 }

@@ -7,6 +7,8 @@ package br.com.tpartner.persistence.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,6 +38,9 @@ public class AccessSession implements Serializable {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student student;
+    
+    @OneToMany(mappedBy = "accessSession", cascade = CascadeType.ALL)
+    private List<Action> actions;
     
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "time_start")
@@ -79,6 +85,14 @@ public class AccessSession implements Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
-    }    
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
     
 }

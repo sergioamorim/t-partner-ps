@@ -80,13 +80,19 @@ public class CSVReader {
         return action;
     }
     
+    private Long getStudentId(String studentIdString) {
+        if (studentIdString.contains("UserAccount_"))
+            return Long.parseLong(studentIdString.replace("UserAccount_", ""));
+        return null;
+    }
+    
     private Student getStudent(List<String> line, StudentCRUD studentDAO) {
         Student student;
-        student = studentDAO.findByIdString(line.get(0));
+        student = studentDAO.findById(this.getStudentId(line.get(0)));
         if (student == null) {
-            student = new Student(line.get(0));
+            student = new Student(this.getStudentId(line.get(0)));
             studentDAO.save(student);
-            student = studentDAO.findByIdString(line.get(0));
+            student = studentDAO.findById(this.getStudentId(line.get(0)));
         }
         return student;
     }
