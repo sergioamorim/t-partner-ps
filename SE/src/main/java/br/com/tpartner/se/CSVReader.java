@@ -148,7 +148,7 @@ public class CSVReader {
     private List<List<String>> getMatrix (String csvFilePath, String csvSeparator, String encoding) throws UnsupportedEncodingException, FileNotFoundException {
         
         List<List<String>> csvMatrix;
-        csvMatrix = new ArrayList<>();
+        csvMatrix = new ArrayList<List<String>>();
         
         List<String> csvLineArray;
         
@@ -160,7 +160,7 @@ public class CSVReader {
         
         try {
             while ((line = reader.readLine()) != null) {
-                csvLineArray = new ArrayList<>();
+                csvLineArray = new ArrayList<String>();
                 columns = line.split(csvSeparator);
                 csvLineArray.addAll(Arrays.asList(columns));
                 csvMatrix.add(csvLineArray);

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AccessSessionWebService {
     @Autowired
     private AccessSessionFacade accessSessionFacade;
-    private String serviceType = "AccessSession Service";
+    public String serviceType = "AccessSession Service";
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Serializable> save(@RequestBody AccessSession accessSession) {

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ActionWebService {
     @Autowired
     private ActionFacade actionFacade;
-    private String serviceType = "Action Service";
+    public String serviceType = "Action Service";
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Serializable> save(@RequestBody Action action) {

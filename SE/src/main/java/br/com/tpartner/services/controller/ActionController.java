@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.ActionCRUD;
 import br.com.tpartner.persistence.model.Action;
+import br.com.tpartner.services.facade.ActionFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class ActionController {
+public class ActionController implements ActionFacade {
     @Autowired
     ActionCRUD actionCRUD;
     

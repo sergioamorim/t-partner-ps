@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.services.facade.AccessSessionFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class AccessSessionController {
+public class AccessSessionController implements AccessSessionFacade {
     @Autowired
     AccessSessionCRUD accessSessionCRUD;
     

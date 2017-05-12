@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.services.facade.StudentFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class StudentController {
+public class StudentController implements StudentFacade {
     @Autowired
     StudentCRUD studentCRUD;
     

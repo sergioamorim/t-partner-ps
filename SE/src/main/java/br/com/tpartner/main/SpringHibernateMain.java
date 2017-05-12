@@ -18,5 +18,6 @@ public class SpringHibernateMain {
         System.out.println("Database OK");
 
         ClientCRUD clientDAO = context.getBean(ClientCRUD.class);
+        context.close();
     }
 }
