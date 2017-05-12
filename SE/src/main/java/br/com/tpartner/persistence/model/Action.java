@@ -12,9 +12,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import org.hibernate.annotations.Columns;
 
 /**
  *
@@ -28,6 +32,14 @@ public class Action implements Serializable {
             allocationSize = 1, sequenceName = "action_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "action_id_seq")
     private Integer id;
+    
+    @Id
+    @JoinColumns({
+        @JoinColumn(name = "access_session_id", referencedColumnName = "id"),
+        @JoinColumn(name = "access_session_student_id", referencedColumnName = "student_id")
+    })
+    @ManyToOne
+    private AccessSession accessSession;
     
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "date_time")
@@ -105,7 +117,7 @@ public class Action implements Serializable {
     public Action() {
     }
     
-    public Action(Date time, String type, String problemId, 
+    public Action(AccessSession accessSession, Date time, String type, String problemId, 
             String problemCorrectlyDone, String problemResponseTime,
             String contentId, String contentViewTime, String lGoalCurriculum,
             String lGoalValue, String dGoalDomain, String dGoalValue,
@@ -114,31 +126,31 @@ public class Action implements Serializable {
             String pbeResponseTime, String pbeAbilityScore, 
             String pbeAbsoluteScore, String pbeNumCorrect, String pbeNumBlank,
             String pbeNumWrong, String activityLoopId){
-        Action action = new Action();
-        action.setTime(time);
-        action.setType(type);
-        action.setProblemId(problemId);
-        action.setProblemCorrectlyDone(problemCorrectlyDone);
-        action.setProblemResponseTime(problemResponseTime);
-        action.setContentId(contentId);
-        action.setContentViewTime(contentViewTime);
-        action.setlGoalCurriculum(lGoalCurriculum);
-        action.setlGoalValue(lGoalValue);
-        action.setdGoalDomain(dGoalDomain);
-        action.setdGoalValue(dGoalValue);
-        action.setGamificationLevel(gamificationLevel);
-        action.setNumberOfPoints(numberOfPoints);
-        action.setRsType(rsType);
-        action.setRsCompleted(rsCompleted);
-        action.setRsNCorrect(rsNCorrect);
-        action.setRsNResources(rsNResources);
-        action.setPbeResponseTime(pbeResponseTime);
-        action.setPbeAbilityScore(pbeAbilityScore);
-        action.setPbeAbsoluteScore(pbeAbsoluteScore);
-        action.setPbeNumCorrect(pbeNumCorrect);
-        action.setPbeNumBlank(pbeNumBlank);
-        action.setPbeNumWrong(pbeNumWrong);
-        action.setActivityLoopId(activityLoopId);
+        this.accessSession = accessSession;
+        this.time = time;
+        this.type = type;
+        this.problemId = problemId;
+        this.problemCorrectlyDone = problemCorrectlyDone;
+        this.problemResponseTime = problemResponseTime;
+        this.contentId = contentId;
+        this.contentViewTime = contentViewTime;
+        this.lGoalCurriculum = lGoalCurriculum;
+        this.lGoalValue = lGoalValue;
+        this.dGoalDomain = dGoalDomain;
+        this.dGoalValue = dGoalValue;
+        this.gamificationLevel = gamificationLevel;
+        this.numberOfPoints = numberOfPoints;
+        this.rsType = rsType;
+        this.rsCompleted = rsCompleted;
+        this.rsNCorrect = rsNCorrect;
+        this.rsNResources = rsNResources;
+        this.pbeResponseTime = pbeResponseTime;
+        this.pbeAbilityScore = pbeAbilityScore;
+        this.pbeAbsoluteScore = pbeAbsoluteScore;
+        this.pbeNumCorrect = pbeNumCorrect;
+        this.pbeNumBlank = pbeNumBlank;
+        this.pbeNumWrong = pbeNumWrong;
+        this.activityLoopId = activityLoopId;
     }
     
     public Integer getActionId() {
@@ -339,4 +351,22 @@ public class Action implements Serializable {
     public void setActivityLoopId(String activityLoopId) {
         this.activityLoopId = activityLoopId;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public AccessSession getAccessSession() {
+        return accessSession;
+    }
+
+    public void setAccessSession(AccessSession accessSession) {
+        this.accessSession = accessSession;
+    }
+    
+    
 }

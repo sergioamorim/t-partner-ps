@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.persistence.model.Student;
 import br.com.tpartner.services.facade.AccessSessionFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class AccessSessionController implements AccessSessionFacade {
 
     public AccessSession findById(int accessSessionId) {
         return this.accessSessionCRUD.findById(accessSessionId);
+    }
+    
+    public List<AccessSession> findByStudent(Student student) {
+        return this.accessSessionCRUD.findByStudent(student);
     }
 
     public List<AccessSession> findAll() {

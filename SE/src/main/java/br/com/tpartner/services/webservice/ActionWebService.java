@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.services.webservice;
 
+import br.com.tpartner.persistence.model.AccessSession;
 import br.com.tpartner.persistence.model.Action;
 import br.com.tpartner.services.facade.ActionFacade;
 import java.io.Serializable;
@@ -52,7 +53,12 @@ public class ActionWebService {
     public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Integer id) {
         Action a = this.actionFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
-    }    
+    }
+    
+    @RequestMapping(value = "/access_session", method = RequestMethod.GET)
+    public @ResponseBody List<Action> findByAccessSession(@RequestParam(value = "accessSession", required = true) AccessSession accessSession) {
+        return this.actionFacade.findByAccessSession(accessSession);
+    }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public @ResponseBody List<Action> findAll() {

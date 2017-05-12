@@ -6,6 +6,7 @@
 package br.com.tpartner.services.facade;
 
 import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.persistence.model.Student;
 import java.util.List;
 
 /**
@@ -19,5 +20,6 @@ public interface AccessSessionFacade {
     public void delete(AccessSession accessSession);
     /* Aux */
     public AccessSession findById(int accessSessionId);
+    public List<AccessSession> findByStudent(Student student);
     public List<AccessSession> findAll();
 }

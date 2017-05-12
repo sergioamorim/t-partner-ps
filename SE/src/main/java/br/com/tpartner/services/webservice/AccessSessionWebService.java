@@ -6,6 +6,7 @@
 package br.com.tpartner.services.webservice;
 
 import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.persistence.model.Student;
 import br.com.tpartner.services.facade.AccessSessionFacade;
 import java.io.Serializable;
 import java.util.List;
@@ -53,7 +54,12 @@ public class AccessSessionWebService {
         AccessSession a = this.accessSessionFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }    
-
+    
+    @RequestMapping(value = "/student", method = RequestMethod.GET)
+    public @ResponseBody List<AccessSession> findByStudent(@RequestParam(value = "student", required = true) Student student) {
+        return this.accessSessionFacade.findByStudent(student);
+    }
+    
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public @ResponseBody List<AccessSession> findAll() {
         return this.accessSessionFacade.findAll();

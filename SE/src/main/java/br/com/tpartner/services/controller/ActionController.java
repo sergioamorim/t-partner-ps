@@ -6,6 +6,7 @@
 package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.ActionCRUD;
+import br.com.tpartner.persistence.model.AccessSession;
 import br.com.tpartner.persistence.model.Action;
 import br.com.tpartner.services.facade.ActionFacade;
 import java.util.List;
@@ -33,6 +34,10 @@ public class ActionController implements ActionFacade {
 
     public Action findById(int actionId) {
         return this.actionCRUD.findById(actionId);
+    }
+    
+    public List<Action> findByAccessSession(AccessSession accessSession) {
+        return this.actionCRUD.findByAccessSession(accessSession);
     }
 
     public List<Action> findAll() {

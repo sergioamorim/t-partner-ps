@@ -12,8 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -29,10 +28,6 @@ public class Student implements Serializable {
             allocationSize = 1, sequenceName = "student_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_seq")
     private Integer id;
-    
-    @OneToMany
-    @JoinColumn(name = "access_session_id", referencedColumnName = "id")
-    private List<AccessSession> accessSessions;
     
     @Column(name = "student_id_string")
     private String studentIdString;
@@ -60,11 +55,12 @@ public class Student implements Serializable {
         this.studentIdString = studentIdString;
     }
 
-    public List<AccessSession> getAccessSessions() {
-        return accessSessions;
+    public Integer getId() {
+        return id;
     }
 
-    public void setAccessSessions(List<AccessSession> accessSessions) {
-        this.accessSessions = accessSessions;
+    public void setId(Integer id) {
+        this.id = id;
     }
+    
 }

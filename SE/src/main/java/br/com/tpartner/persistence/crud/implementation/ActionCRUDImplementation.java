@@ -6,6 +6,7 @@
 package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.ActionCRUD;
+import br.com.tpartner.persistence.model.AccessSession;
 import br.com.tpartner.persistence.model.Action;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -70,7 +71,17 @@ public class ActionCRUDImplementation implements ActionCRUD {
         session.close();
         return action;
     }
-
+    
+    @Override
+    public List<Action> findByAccessSession(AccessSession accessSession) {
+        Session session = getCurrentSession();
+        Criteria createCriteria = session.createCriteria(Action.class);
+        createCriteria.add(Restrictions.eq("accessSession", accessSession));
+        List<Action> actions = createCriteria.list();
+        session.close();
+        return actions;
+    }
+    
     @Override
     public List<Action> findAll() {
         Session session = getCurrentSession();

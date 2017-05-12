@@ -7,6 +7,7 @@ package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
+import br.com.tpartner.persistence.model.Student;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -69,6 +70,16 @@ public class AccessSessionCRUDImplementation implements AccessSessionCRUD {
         System.out.println(createCriteria.toString());
         session.close();
         return accessSession;
+    }
+    
+    @Override
+    public List<AccessSession> findByStudent(Student student) {
+        Session session = getCurrentSession();
+        Criteria createCriteria = session.createCriteria(AccessSession.class);
+        createCriteria.add(Restrictions.eq("student", student));
+        List<AccessSession> accessSessions = (List<AccessSession>) createCriteria.list();
+        session.close();
+        return accessSessions;
     }
 
     @Override

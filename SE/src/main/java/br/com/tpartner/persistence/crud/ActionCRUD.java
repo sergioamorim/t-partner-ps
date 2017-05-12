@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.persistence.crud;
 
+import br.com.tpartner.persistence.model.AccessSession;
 import br.com.tpartner.persistence.model.Action;
 import java.util.List;
 
@@ -19,5 +20,6 @@ public interface ActionCRUD {
     public void delete(Action action);
     /* Aux */
     public Action findById(int actionId);
+    public List<Action> findByAccessSession(AccessSession accessSession);
     public List<Action> findAll();
 }

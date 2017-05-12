@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -32,9 +33,10 @@ public class AccessSession implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_session_id_seq")
     private Integer id;
     
-    @OneToMany
-    @JoinColumn(name = "action_id", referencedColumnName = "id")
-    private List<Action> actions;
+    @Id
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @ManyToOne
+    private Student student;
     
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "time_start")
@@ -44,7 +46,8 @@ public class AccessSession implements Serializable {
         
     }
     
-    public AccessSession(Date timeStart) {
+    public AccessSession(Student student, Date timeStart) {
+        this.student = student;
         this.timeStart = timeStart;
     }
     
@@ -55,15 +58,7 @@ public class AccessSession implements Serializable {
     public void setAccessSessionId(Integer id) {
         this.id = id;
     }
-
-    public List<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
-    }
-
+    
     public Date getTimeStart() {
         return timeStart;
     }
@@ -71,4 +66,21 @@ public class AccessSession implements Serializable {
     public void setTimeStart(Date timeStart) {
         this.timeStart = timeStart;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }    
+    
 }

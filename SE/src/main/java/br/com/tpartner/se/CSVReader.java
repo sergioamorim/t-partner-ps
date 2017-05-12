@@ -35,7 +35,7 @@ public class CSVReader {
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs.csv", ";", "iso-8859-1");
+        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs-test.csv", ";", "iso-8859-1");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         reader.run(context, csvMatrix);
         context.close();
@@ -44,7 +44,7 @@ public class CSVReader {
     
     private void run(ClassPathXmlApplicationContext context, List<List<String>> csvMatrix) throws ParseException {
         StudentCRUD studentDAO = context.getBean(StudentCRUD.class);
-        this.createStudents(csvMatrix, studentDAO);
+//        this.createStudents(csvMatrix, studentDAO);
         AccessSessionCRUD accessSessionDAO = context.getBean(AccessSessionCRUD.class);
         this.createAccessSessions(csvMatrix, accessSessionDAO, studentDAO);
         ActionCRUD actionDAO = context.getBean(ActionCRUD.class);
@@ -68,10 +68,10 @@ public class CSVReader {
         return dateTime;
     }
     
-    private Action getAction(List<String> line) throws ParseException{
+    private Action getAction(List<String> line, AccessSession accessSession) throws ParseException{
         Date dateTime = getDateTime(line);
         Action action;
-        action = new Action(dateTime, line.get(1), line.get(3), line.get(4), 
+        action = new Action(accessSession, dateTime, line.get(1), line.get(3), line.get(4), 
                 line.get(5), line.get(6), line.get(7), line.get(8), 
                 line.get(9), line.get(10), line.get(11), line.get(12),
                 line.get(13), line.get(14), line.get(15), line.get(16),
@@ -91,10 +91,9 @@ public class CSVReader {
         return student;
     }
     
-    private AccessSession getAccessSession(List<String> line, StudentCRUD studentDAO) throws ParseException {
-        Student student = getStudent(line, studentDAO);
+    private AccessSession getAccessSession(List<String> line, AccessSessionCRUD accessSessionDAO, Student student) throws ParseException {
         Date dateTime = getDateTime(line);
-        List<AccessSession> accessSessions = student.getAccessSessions();
+        List<AccessSession> accessSessions = accessSessionDAO.findByStudent(student);
         return getNearestAccessSession(accessSessions, dateTime);
     }
     
@@ -109,12 +108,8 @@ public class CSVReader {
         for (List<String> line : csvMatrix) {
             if (line.get(1).contains("USER_SESSION")) {
                 Student student = getStudent(line, studentDAO);
-                List<AccessSession> accessSessions = student.getAccessSessions();
-                AccessSession accessSession = new AccessSession(getDateTime(line));
+                AccessSession accessSession = new AccessSession(student, getDateTime(line));
                 accessSessionDAO.save(accessSession);
-                accessSessions.add(accessSession);
-                student.setAccessSessions(accessSessions);
-                studentDAO.update(student);
             }
         }
     }
@@ -136,13 +131,10 @@ public class CSVReader {
     private void createActions(List<List<String>> csvMatrix, ActionCRUD actionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO) throws ParseException{
         for (List<String> line : csvMatrix) {
             if (!line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
-                AccessSession accessSession = getAccessSession(line, studentDAO);
-                Action action = getAction(line);
+                Student student = getStudent(line, studentDAO);
+                AccessSession accessSession = getAccessSession(line, accessSessionDAO, student);
+                Action action = getAction(line, accessSession);
                 actionDAO.save(action);
-                List<Action> actions = accessSession.getActions();
-                actions.add(action);
-                accessSession.setActions(actions);
-                accessSessionDAO.update(accessSession);
             }
         }
     }
