@@ -66,7 +66,6 @@ public class StudentCRUDImplementation implements StudentCRUD {
         Criteria createCriteria = session.createCriteria(Student.class);
         createCriteria.add(Restrictions.eq("id", studentId));
         Student student = (Student) createCriteria.uniqueResult();
-        System.out.println(createCriteria.toString());
         session.close();
         return student;
     }

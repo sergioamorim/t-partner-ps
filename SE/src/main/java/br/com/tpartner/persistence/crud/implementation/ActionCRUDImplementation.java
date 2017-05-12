@@ -67,7 +67,6 @@ public class ActionCRUDImplementation implements ActionCRUD {
         Criteria createCriteria = session.createCriteria(Action.class);
         createCriteria.add(Restrictions.eq("id", actionId));
         Action action = (Action) createCriteria.uniqueResult();
-        System.out.println(createCriteria.toString());
         session.close();
         return action;
     }

@@ -67,7 +67,6 @@ public class AccessSessionCRUDImplementation implements AccessSessionCRUD {
         Criteria createCriteria = session.createCriteria(AccessSession.class);
         createCriteria.add(Restrictions.eq("id", accessSessionId));
         AccessSession accessSession = (AccessSession) createCriteria.uniqueResult();
-        System.out.println(createCriteria.toString());
         session.close();
         return accessSession;
     }

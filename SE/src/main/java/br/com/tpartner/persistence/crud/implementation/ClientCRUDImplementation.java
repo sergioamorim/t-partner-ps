@@ -74,7 +74,6 @@ public class ClientCRUDImplementation implements ClientCRUD {
         Criteria createCriteria = session.createCriteria(Client.class);
         createCriteria.add(Restrictions.eq("id", clientId));
         Client c = (Client) createCriteria.uniqueResult();
-        System.out.println(createCriteria.toString());
         session.close();
         return c;
     }
