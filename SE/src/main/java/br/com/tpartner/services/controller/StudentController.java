@@ -34,6 +34,10 @@ public class StudentController implements StudentFacade {
     public Student findById(int studentId) {
         return this.studentCRUD.findById(studentId);
     }
+    
+    public Student findByIdString(String studentIdString) {
+        return this.studentCRUD.findByIdString(studentIdString);
+    }
 
     public List<Student> findAll() {
         return this.studentCRUD.findAll();

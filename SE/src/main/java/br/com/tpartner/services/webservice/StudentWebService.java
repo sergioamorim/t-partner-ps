@@ -53,8 +53,14 @@ public class StudentWebService {
         Student a = this.studentFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }    
+    
+    @RequestMapping(value = "/id", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<Serializable> findByIdString(@RequestParam(value = "student_id_string", required = true) String studentIdString) {
+        Student a = this.studentFacade.findByIdString(studentIdString);
+        return new ResponseEntity<Serializable>(a,HttpStatus.OK);
+    }    
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody List<Student> findAll() {
         return this.studentFacade.findAll();
     }

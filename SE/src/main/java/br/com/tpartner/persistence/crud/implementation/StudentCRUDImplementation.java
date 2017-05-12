@@ -79,7 +79,8 @@ public class StudentCRUDImplementation implements StudentCRUD {
         return students;
     }
     
-    public Student findByStudentIdString(String studentIdString) {
+    @Override
+    public Student findByIdString(String studentIdString) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(Student.class);
         createCriteria.add(Restrictions.eq("studentIdString", studentIdString));

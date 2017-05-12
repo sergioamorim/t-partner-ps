@@ -20,5 +20,7 @@ public interface StudentCRUD {
     /* Aux */
     public Student findById(int studentId);
     public List<Student> findAll();
+
+    public Student findByIdString(String studentIdString);
 }
 
