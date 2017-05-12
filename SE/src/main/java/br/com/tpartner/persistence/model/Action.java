@@ -32,11 +32,7 @@ public class Action implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "action_id_seq")
     private Integer id;
     
-    @Id
-    @JoinColumns({
-        @JoinColumn(name = "access_session_id", referencedColumnName = "id"),
-        @JoinColumn(name = "access_session_student_id", referencedColumnName = "student_id")
-    })
+    @JoinColumn(name = "access_session", referencedColumnName = "id")
     @ManyToOne
     private AccessSession accessSession;
     

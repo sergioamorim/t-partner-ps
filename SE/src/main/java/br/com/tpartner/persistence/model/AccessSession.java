@@ -33,16 +33,15 @@ public class AccessSession implements Serializable {
             allocationSize = 1, sequenceName = "access_session_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_session_id_seq")
     private Integer id;
-    
-    @Id
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
+
+    @JoinColumn(name = "student", referencedColumnName = "id")
     @ManyToOne
     private Student student;
     
     @OneToMany(mappedBy = "accessSession", cascade = CascadeType.ALL)
     private List<Action> actions;
     
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "time_start")
     private Date timeStart;
     

@@ -24,9 +24,6 @@ import javax.persistence.Table;
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
-    @SequenceGenerator(name = "student_id_seq", initialValue = 1,
-            allocationSize = 1, sequenceName = "student_id_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_id_seq")
     private Long id;
     
     @OneToMany(mappedBy="student", cascade = CascadeType.ALL)
