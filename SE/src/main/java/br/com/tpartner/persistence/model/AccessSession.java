@@ -45,8 +45,7 @@ public class AccessSession implements Serializable {
     }
     
     public AccessSession(Date timeStart) {
-        AccessSession accessSession = new AccessSession();
-        accessSession.setTimeStart(timeStart);
+        this.timeStart = timeStart;
     }
     
     public Integer getAccessSessionId() {

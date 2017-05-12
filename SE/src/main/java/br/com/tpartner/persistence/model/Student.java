@@ -41,8 +41,7 @@ public class Student implements Serializable {
     }
     
     public Student(String studentIdString){
-        Student student = new Student();
-        student.setStudentIdString(studentIdString);
+        this.studentIdString = studentIdString;
     }
     
     public Integer getStudentId() {
