@@ -18,7 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import org.hibernate.annotations.Columns;
 
 /**
  *
