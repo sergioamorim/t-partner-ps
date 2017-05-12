@@ -44,7 +44,7 @@ public class CSVReader {
     
     private void run(ClassPathXmlApplicationContext context, List<List<String>> csvMatrix) throws ParseException {
         StudentCRUD studentDAO = context.getBean(StudentCRUD.class);
-//        this.createStudents(csvMatrix, studentDAO);
+        this.createStudents(csvMatrix, studentDAO);
         AccessSessionCRUD accessSessionDAO = context.getBean(AccessSessionCRUD.class);
         this.createAccessSessions(csvMatrix, accessSessionDAO, studentDAO);
         ActionCRUD actionDAO = context.getBean(ActionCRUD.class);
@@ -87,6 +87,8 @@ public class CSVReader {
     }
     
     private Student getStudent(List<String> line, StudentCRUD studentDAO) {
+        if (this.getStudentId(line.get(0)) == null)
+            return null;
         Student student;
         student = studentDAO.findById(this.getStudentId(line.get(0)));
         if (student == null) {
@@ -112,7 +114,7 @@ public class CSVReader {
     
     private void createAccessSessions(List<List<String>> csvMatrix, AccessSessionCRUD accessSessionDAO, StudentCRUD studentDAO) throws ParseException {
         for (List<String> line : csvMatrix) {
-            if (line.get(1).contains("USER_SESSION")) {
+            if (line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
                 Student student = getStudent(line, studentDAO);
                 AccessSession accessSession = new AccessSession(student, getDateTime(line));
                 accessSessionDAO.save(accessSession);
