@@ -45,7 +45,7 @@ public class StudentWebService {
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Long id) {
         this.studentFacade.delete(this.studentFacade.findById(id));
-        return new ResponseEntity<Serializable>(serviceType+": Student deletado com sucesso!",HttpStatus.OK);
+        return new ResponseEntity<Serializable>(serviceType+": Student deleted",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)

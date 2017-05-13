@@ -46,7 +46,7 @@ public class AccessSessionWebService {
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Integer id) {
         this.accessSessionFacade.delete(this.accessSessionFacade.findById(id));
-        return new ResponseEntity<Serializable>(serviceType+": AccessSession deletado com sucesso!",HttpStatus.OK);
+        return new ResponseEntity<Serializable>(serviceType+": AccessSession deleted",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)
