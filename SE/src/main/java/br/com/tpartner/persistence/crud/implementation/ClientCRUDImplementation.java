@@ -69,7 +69,7 @@ public class ClientCRUDImplementation implements ClientCRUD {
     }
 
     @Override
-    public Client findById(int clientId) {
+    public Client findById(Integer clientId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(Client.class);
         createCriteria.add(Restrictions.eq("id", clientId));

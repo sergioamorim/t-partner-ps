@@ -19,7 +19,7 @@ public interface AccessSessionCRUD {
     public AccessSession update(AccessSession accessSession);
     public void delete(AccessSession accessSession);
     /* Aux */
-    public AccessSession findById(int accessSessionId);
+    public AccessSession findById(Integer accessSessionId);
     public List<AccessSession> findByStudent(Student student);
     public List<AccessSession> findAll();
 }

@@ -18,6 +18,6 @@ public interface ClientCRUD {
     public Client update(Client client);
     public void delete(Client client);
     /* Aux */
-    public Client findById(int clientId);
+    public Client findById(Integer clientId);
     public List<Client> findAll();
 }

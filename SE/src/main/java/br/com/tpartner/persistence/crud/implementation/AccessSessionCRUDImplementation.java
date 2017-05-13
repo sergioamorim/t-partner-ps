@@ -62,7 +62,7 @@ public class AccessSessionCRUDImplementation implements AccessSessionCRUD {
     }
 
     @Override
-    public AccessSession findById(int accessSessionId) {
+    public AccessSession findById(Integer accessSessionId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(AccessSession.class);
         createCriteria.add(Restrictions.eq("id", accessSessionId));
