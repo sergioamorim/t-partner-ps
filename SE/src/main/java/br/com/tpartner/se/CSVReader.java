@@ -133,12 +133,9 @@ public class CSVReader {
                 if (accessSession.getTimeStart().compareTo(dateTime) < nearestComparation) {
                     nearestComparation = accessSession.getTimeStart().compareTo(dateTime);
                     nearestAccessSession = accessSession;
-                    System.out.println("0");
                 }
             }
         }
-        if (nearestAccessSession == null)
-            System.out.println("1");
         return nearestAccessSession;
     }
     
@@ -148,7 +145,7 @@ public class CSVReader {
             List<StudentAction> studentActions = studentActionDAO.findBySubSession(subSession);
             for (StudentAction studentAction : studentActions) {
                 Long diff = studentAction.getTime().getTime() - getDateTime(line).getTime();
-                if (diff > -1800000 ||  diff < 1800000) {
+                if (diff > -1800000 &&  diff < 1800000) {
                     return subSession;
                 }
             }
