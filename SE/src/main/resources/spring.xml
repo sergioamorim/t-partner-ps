@@ -27,7 +27,8 @@
         <property name="annotatedClasses">
             <list>
                 <value>br.com.tpartner.persistence.model.Client</value>
-                <value>br.com.tpartner.persistence.model.Action</value>
+                <value>br.com.tpartner.persistence.model.StudentAction</value>
+                <value>br.com.tpartner.persistence.model.SubSession</value>
                 <value>br.com.tpartner.persistence.model.AccessSession</value>
                 <value>br.com.tpartner.persistence.model.Student</value>
             </list>
@@ -47,7 +48,11 @@
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
     </bean>
     
-    <bean id="actionCRUD" class="br.com.tpartner.persistence.crud.implementation.ActionCRUDImplementation">
+    <bean id="studentActionCRUD" class="br.com.tpartner.persistence.crud.implementation.StudentActionCRUDImplementation">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    
+    <bean id="subSessionCRUD" class="br.com.tpartner.persistence.crud.implementation.SubSessionCRUDImplementation">
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
     </bean>
     
@@ -59,7 +64,8 @@
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
     </bean>
 
-    <bean id="actionController" class="br.com.tpartner.services.controller.ActionController"/>
+    <bean id="studentActionController" class="br.com.tpartner.services.controller.StudentActionController"/>
+    <bean id="subSessionController" class="br.com.tpartner.services.controller.SubSessionController"/>
     <bean id="accessSessionController" class="br.com.tpartner.services.controller.AccessSessionController"/>
     <bean id="studentController" class="br.com.tpartner.services.controller.StudentController"/>
 

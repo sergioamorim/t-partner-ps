@@ -5,9 +5,9 @@
  */
 package br.com.tpartner.persistence.crud.implementation;
 
-import br.com.tpartner.persistence.crud.ActionCRUD;
+import br.com.tpartner.persistence.crud.SubSessionCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
-import br.com.tpartner.persistence.model.Action;
+import br.com.tpartner.persistence.model.SubSession;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -22,10 +22,10 @@ import org.springframework.stereotype.Repository;
  * @author sergio
  */
 @Repository
-public class ActionCRUDImplementation implements ActionCRUD {
+public class SubSessionCRUDImplementation implements SubSessionCRUD {
     @Autowired
     private SessionFactory sessionFactory;
-    public void setSessionFactory(SessionFactory sessionFactory) {
+    public void setSessionFactory (SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
     public Session getCurrentSession() {
@@ -33,59 +33,59 @@ public class ActionCRUDImplementation implements ActionCRUD {
     }
     
     @Override
-    public Action save(Action action) {
+    public SubSession save(SubSession subSession) {
         Session session = getCurrentSession();
         Transaction tx = session.beginTransaction();
-        session.save(action);
+        session.save(subSession);
         tx.commit();
         session.close();
-        return action;
+        return subSession;
     }
     
     @Override
-    public Action update(Action action) {
+    public SubSession update(SubSession subSession) {
         Session session = getCurrentSession();
         Transaction tx = session.beginTransaction();
-        session.update(action);
+        session.update(subSession);
         tx.commit();
         session.close();
-        return action;
+        return subSession;
     }
     
     @Override
-    public void delete(Action action) {
+    public void delete(SubSession subSession) {
         Session session = getCurrentSession();
         Transaction tx = session.beginTransaction();
-        session.delete(action);
+        session.delete(subSession);
         tx.commit();
         session.close();
     }
 
     @Override
-    public Action findById(int actionId) {
+    public SubSession findById(Integer subSessionId) {
         Session session = getCurrentSession();
-        Criteria createCriteria = session.createCriteria(Action.class);
-        createCriteria.add(Restrictions.eq("id", actionId));
-        Action action = (Action) createCriteria.uniqueResult();
+        Criteria createCriteria = session.createCriteria(SubSession.class);
+        createCriteria.add(Restrictions.eq("id", subSessionId));
+        SubSession subSession = (SubSession) createCriteria.uniqueResult();
         session.close();
-        return action;
+        return subSession;
     }
     
     @Override
-    public List<Action> findByAccessSession(AccessSession accessSession) {
+    public List<SubSession> findByAccessSession(AccessSession accessSession) {
         Session session = getCurrentSession();
-        Criteria createCriteria = session.createCriteria(Action.class);
+        Criteria createCriteria = session.createCriteria(SubSession.class);
         createCriteria.add(Restrictions.eq("accessSession", accessSession));
-        List<Action> actions = createCriteria.list();
+        List<SubSession> subSessions = (List<SubSession>) createCriteria.list();
         session.close();
-        return actions;
+        return subSessions;
     }
-    
+
     @Override
-    public List<Action> findAll() {
+    public List<SubSession> findAll() {
         Session session = getCurrentSession();
-        List<Action> actions = session.createCriteria(Action.class).list();
+        List<SubSession> subSessions = session.createCriteria(SubSession.class).list();
         session.close();
-        return actions;
+        return subSessions;
     }
 }

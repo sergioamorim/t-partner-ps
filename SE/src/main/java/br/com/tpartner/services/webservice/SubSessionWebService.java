@@ -6,8 +6,8 @@
 package br.com.tpartner.services.webservice;
 
 import br.com.tpartner.persistence.model.AccessSession;
-import br.com.tpartner.persistence.model.Action;
-import br.com.tpartner.services.facade.ActionFacade;
+import br.com.tpartner.persistence.model.SubSession;
+import br.com.tpartner.services.facade.SubSessionFacade;
 import java.io.Serializable;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,43 +25,43 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author sergio
  */
 @Controller
-@RequestMapping("/action")
-public class ActionWebService {
+@RequestMapping("/sub_session")
+public class SubSessionWebService {
     @Autowired
-    private ActionFacade actionFacade;
-    public String serviceType = "Action Service";
+    private SubSessionFacade subSessionFacade;
+    public String serviceType = "SubSession Service";
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Serializable> save(@RequestBody Action action) {
-        Action a = this.actionFacade.save(action);
+    public @ResponseBody ResponseEntity<Serializable> save(@RequestBody SubSession subSession) {
+        SubSession a = this.subSessionFacade.save(subSession);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public @ResponseBody ResponseEntity<Serializable> update(@RequestBody Action action) {
-        Action a = this.actionFacade.update(action);
+    public @ResponseBody ResponseEntity<Serializable> update(@RequestBody SubSession subSession) {
+        SubSession a = this.subSessionFacade.update(subSession);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Integer id) {
-        this.actionFacade.delete(this.actionFacade.findById(id));
-        return new ResponseEntity<Serializable>(serviceType+": Action deletado com sucesso!",HttpStatus.OK);
+        this.subSessionFacade.delete(this.subSessionFacade.findById(id));
+        return new ResponseEntity<Serializable>(serviceType+": SubSession deleted",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Integer id) {
-        Action a = this.actionFacade.findById(id);
+        SubSession a = this.subSessionFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
     
     @RequestMapping(value = "/access_session", method = RequestMethod.GET)
-    public @ResponseBody List<Action> findByAccessSession(@RequestParam(value = "accessSession", required = true) AccessSession accessSession) {
-        return this.actionFacade.findByAccessSession(accessSession);
+    public @ResponseBody List<SubSession> findByAccessSession(@RequestParam(value = "accessSession", required = true) AccessSession accessSession) {
+        return this.subSessionFacade.findByAccessSession(accessSession);
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    public @ResponseBody List<Action> findAll() {
-        return this.actionFacade.findAll();
+    public @ResponseBody List<SubSession> findAll() {
+        return this.subSessionFacade.findAll();
     }
 }

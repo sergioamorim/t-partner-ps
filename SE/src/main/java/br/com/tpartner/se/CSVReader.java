@@ -6,10 +6,9 @@
 package br.com.tpartner.se;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
-import br.com.tpartner.persistence.crud.ActionCRUD;
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
-import br.com.tpartner.persistence.model.Action;
+import br.com.tpartner.persistence.model.StudentAction;
 import br.com.tpartner.persistence.model.Student;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -24,6 +23,9 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import br.com.tpartner.persistence.crud.StudentActionCRUD;
+import br.com.tpartner.persistence.crud.SubSessionCRUD;
+import br.com.tpartner.persistence.model.SubSession;
 
 /**
  *
@@ -35,7 +37,7 @@ public class CSVReader {
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs-test.csv", ";", "iso-8859-1");
+        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs.csv", ";", "iso-8859-1");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         reader.run(context, csvMatrix);
         context.close();
@@ -47,8 +49,9 @@ public class CSVReader {
         this.createStudents(csvMatrix, studentDAO);
         AccessSessionCRUD accessSessionDAO = context.getBean(AccessSessionCRUD.class);
         this.createAccessSessions(csvMatrix, accessSessionDAO, studentDAO);
-        ActionCRUD actionDAO = context.getBean(ActionCRUD.class);
-        this.createActions(csvMatrix, actionDAO, studentDAO, accessSessionDAO);
+        SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
+        StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
+        this.createStudentActions(csvMatrix, studentActionDAO, studentDAO, accessSessionDAO, subSessionDAO);
     }
     
     private SimpleDateFormat getTimestampType(String timeString){
@@ -68,16 +71,16 @@ public class CSVReader {
         return dateTime;
     }
     
-    private Action getAction(List<String> line, AccessSession accessSession) throws ParseException{
+    private StudentAction getStudentAction(List<String> line, SubSession subSession) throws ParseException{
         Date dateTime = getDateTime(line);
-        Action action;
-        action = new Action(accessSession, dateTime, line.get(1), line.get(3), line.get(4), 
+        StudentAction studentAction;
+        studentAction = new StudentAction(subSession, dateTime, line.get(1), line.get(3), line.get(4), 
                 line.get(5), line.get(6), line.get(7), line.get(8), 
                 line.get(9), line.get(10), line.get(11), line.get(12),
                 line.get(13), line.get(14), line.get(15), line.get(16),
                 line.get(17), line.get(18), line.get(19), line.get(20),
                 line.get(21), line.get(22), line.get(23), line.get(24));
-        return action;
+        return studentAction;
     }
     
     private Long getStudentId(String studentIdString) {
@@ -130,19 +133,40 @@ public class CSVReader {
                 if (accessSession.getTimeStart().compareTo(dateTime) < nearestComparation) {
                     nearestComparation = accessSession.getTimeStart().compareTo(dateTime);
                     nearestAccessSession = accessSession;
+                    System.out.println("0");
                 }
             }
         }
+        if (nearestAccessSession == null)
+            System.out.println("1");
         return nearestAccessSession;
     }
     
-    private void createActions(List<List<String>> csvMatrix, ActionCRUD actionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO) throws ParseException{
+    private SubSession getSubSession(List<String> line, SubSessionCRUD subSessionDAO, AccessSession accessSession, StudentActionCRUD studentActionDAO) throws ParseException {
+        List<SubSession> subSessions = subSessionDAO.findByAccessSession(accessSession);
+        for (SubSession subSession : subSessions) {
+            List<StudentAction> studentActions = studentActionDAO.findBySubSession(subSession);
+            for (StudentAction studentAction : studentActions) {
+                Long diff = studentAction.getTime().getTime() - getDateTime(line).getTime();
+                if (diff > -1800000 ||  diff < 1800000) {
+                    return subSession;
+                }
+            }
+        }
+        SubSession subSession = new SubSession(getDateTime(line), accessSession);
+        return subSessionDAO.save(subSession);
+    }
+    
+    private void createStudentActions(List<List<String>> csvMatrix, StudentActionCRUD studentActionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO) throws ParseException{
         for (List<String> line : csvMatrix) {
             if (!line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
                 Student student = getStudent(line, studentDAO);
                 AccessSession accessSession = getAccessSession(line, accessSessionDAO, student);
-                Action action = getAction(line, accessSession);
-                actionDAO.save(action);
+                if (accessSession != null) {
+                    SubSession subSession = getSubSession(line, subSessionDAO, accessSession, studentActionDAO);
+                    StudentAction studentAction = getStudentAction(line, subSession);
+                    studentActionDAO.save(studentAction);
+                }
             }
         }
     }

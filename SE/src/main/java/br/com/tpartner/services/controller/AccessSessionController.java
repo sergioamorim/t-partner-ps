@@ -32,7 +32,7 @@ public class AccessSessionController implements AccessSessionFacade {
         this.accessSessionCRUD.delete(accessSession);
     }
 
-    public AccessSession findById(int accessSessionId) {
+    public AccessSession findById(Integer accessSessionId) {
         return this.accessSessionCRUD.findById(accessSessionId);
     }
     

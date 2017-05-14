@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,19 +23,19 @@ import javax.persistence.Temporal;
  * @author sergio
  */
 @Entity
-@Table(name = "action")
-public class Action implements Serializable {
+@Table(name = "student_action")
+public class StudentAction implements Serializable {
     @Id
     @SequenceGenerator(name = "action_id_seq", initialValue = 1,
             allocationSize = 1, sequenceName = "action_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "action_id_seq")
     private Integer id;
     
-    @JoinColumn(name = "access_session", referencedColumnName = "id")
+    @JoinColumn(name = "sub_session_id", referencedColumnName = "id")
     @ManyToOne
-    private AccessSession accessSession;
+    private SubSession subSession;
     
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "date_time")
     private Date time;
     
@@ -109,10 +108,10 @@ public class Action implements Serializable {
     @Column(name = "activity_loop_id")
     private String activityLoopId;
 
-    public Action() {
+    public StudentAction() {
     }
     
-    public Action(AccessSession accessSession, Date time, String type, String problemId, 
+    public StudentAction(SubSession subSession, Date time, String type, String problemId, 
             String problemCorrectlyDone, String problemResponseTime,
             String contentId, String contentViewTime, String lGoalCurriculum,
             String lGoalValue, String dGoalDomain, String dGoalValue,
@@ -121,7 +120,7 @@ public class Action implements Serializable {
             String pbeResponseTime, String pbeAbilityScore, 
             String pbeAbsoluteScore, String pbeNumCorrect, String pbeNumBlank,
             String pbeNumWrong, String activityLoopId){
-        this.accessSession = accessSession;
+        this.subSession = subSession;
         this.time = time;
         this.type = type;
         this.problemId = problemId;
@@ -148,11 +147,11 @@ public class Action implements Serializable {
         this.activityLoopId = activityLoopId;
     }
     
-    public Integer getActionId() {
+    public Integer getStudentActionId() {
         return id;
     }
 
-    public void setActionId(Integer id) {
+    public void setStudentActionId(Integer id) {
         this.id = id;
     }
 
@@ -355,12 +354,12 @@ public class Action implements Serializable {
         this.id = id;
     }
 
-    public AccessSession getAccessSession() {
-        return accessSession;
+    public SubSession getSubSession() {
+        return subSession;
     }
 
-    public void setAccessSession(AccessSession accessSession) {
-        this.accessSession = accessSession;
+    public void setSubSession(SubSession subSession) {
+        this.subSession = subSession;
     }
     
     

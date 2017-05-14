@@ -34,12 +34,12 @@ public class AccessSession implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_session_id_seq")
     private Integer id;
 
-    @JoinColumn(name = "student", referencedColumnName = "id")
+    @JoinColumn(name = "student_id", referencedColumnName = "id")
     @ManyToOne
     private Student student;
     
     @OneToMany(mappedBy = "accessSession", cascade = CascadeType.ALL)
-    private List<Action> actions;
+    private List<SubSession> subSessions;
     
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(name = "time_start")
@@ -84,14 +84,6 @@ public class AccessSession implements Serializable {
 
     public void setStudent(Student student) {
         this.student = student;
-    }
-
-    public List<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
     }
     
 }
