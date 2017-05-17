@@ -32,14 +32,6 @@ public class Student implements Serializable {
     public Student(Long id){
         this.id = id;
     }
-    
-    public Long getStudentId() {
-        return id;
-    }
-    
-    public void setStudentId(Long id) {
-        this.id = id;
-    }
 
     public Long getId() {
         return id;
