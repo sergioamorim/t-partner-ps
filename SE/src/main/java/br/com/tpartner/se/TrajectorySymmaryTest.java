@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.se;
 
+import br.com.tpartner.persistence.model.TrajectorySummary;
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.Student;
 import java.io.IOException;
