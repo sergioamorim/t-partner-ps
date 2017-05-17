@@ -25,7 +25,7 @@ import br.com.tpartner.services.facade.StudentActionFacade;
  * @author sergio
  */
 @Controller
-@RequestMapping("/action")
+@RequestMapping("/student_action")
 public class StudentActionWebService {
     @Autowired
     private StudentActionFacade actionFacade;
