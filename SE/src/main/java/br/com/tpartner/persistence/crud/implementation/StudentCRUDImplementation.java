@@ -7,7 +7,14 @@ package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.persistence.model.TrajectorySummary;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -76,6 +83,28 @@ public class StudentCRUDImplementation implements StudentCRUD {
         List<Student> students = session.createCriteria(Student.class).list();
         session.close();
         return students;
+    }
+    
+    @Override
+    public TrajectorySummary getSummary(Long studentId, String timeStartString, String timeEndString){
+        Session session = getCurrentSession();
+        Student student = this.findById(studentId);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        Date timeStart = null;
+        Date timeEnd = null;
+        TrajectorySummary trajectorySummary = null;
+        try {
+            timeStart = dateFormat.parse(timeStartString);
+            timeEnd = dateFormat.parse(timeEndString);
+            trajectorySummary = new TrajectorySummary(student, timeStart, timeEnd);
+        } catch (ParseException ex) {
+            Logger.getLogger(StudentCRUDImplementation.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(StudentCRUDImplementation.class.getName()).
+                    log(Level.SEVERE, null, ex);
+        }
+        return trajectorySummary;
     }
     
 }
