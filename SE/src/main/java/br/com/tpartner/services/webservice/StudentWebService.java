@@ -6,6 +6,7 @@
 package br.com.tpartner.services.webservice;
 
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.persistence.model.TrajectorySummary;
 import br.com.tpartner.services.facade.StudentFacade;
 import java.io.Serializable;
 import java.util.List;
@@ -52,10 +53,16 @@ public class StudentWebService {
     public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Long id) {
         Student a = this.studentFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
-    }    
+    }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody List<Student> findAll() {
         return this.studentFacade.findAll();
+    }
+    
+    @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<Serializable> getSummary(@RequestParam(value = "student_id", required = true) Long studentId, @RequestParam(value = "time_start", required = true) String timeStartString, @RequestParam(value = "time_end", required = true) String timeEndString) {
+        TrajectorySummary a = this.studentFacade.getSummary(studentId, timeStartString, timeEndString);
+        return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
 }
