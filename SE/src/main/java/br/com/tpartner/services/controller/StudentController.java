@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.persistence.model.TrajectorySummary;
 import br.com.tpartner.services.facade.StudentFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,13 @@ public class StudentController implements StudentFacade {
     public Student findById(Long studentId) {
         return this.studentCRUD.findById(studentId);
     }
-
+    
     public List<Student> findAll() {
         return this.studentCRUD.findAll();
     }
+    
+    public TrajectorySummary getSummary(Long studentId, String timeStartString, String timeEndString) {
+        return this.studentCRUD.getSummary(studentId, timeStartString, timeEndString);
+    }
+    
 }
