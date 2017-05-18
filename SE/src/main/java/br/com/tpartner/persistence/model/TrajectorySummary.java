@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -41,6 +42,7 @@ public class TrajectorySummary implements Serializable {
     private Double triesPerProblem;
     private Double problemSolvingAverageTime;
     private Double contentViewAverageTime;
+    private Double actionsPerSubSessionAverage;
     private String lastLevelReached;
     private String subSessionsTrackedJson;
     private String studentActionsTrackedJson;
@@ -66,7 +68,7 @@ public class TrajectorySummary implements Serializable {
     }
 
     private void run() {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        AbstractApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         AccessSessionCRUD accessSessionDAO = context.getBean(AccessSessionCRUD.class);
         List<AccessSession> accessSessions = accessSessionDAO.findByStudent(this.student);
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
@@ -123,10 +125,11 @@ public class TrajectorySummary implements Serializable {
                         learningGoalsReachedTracked.add(studentAction.getlGoalCurriculum());
                     }
                 }
-                context.close();
             }
         }
-        this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / problemsTriedTracked.size();
+        this.problemsTriedTotal = this.failsTotal + this.hitsTotal;
+        this.contentsViewedTotal = contentsViewedTracked.size();
+        this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / this.contentsViewedTotal;
         this.contentViewAverageTime = (double) this.contentViewTotalTime / contentsViewedTracked.size();
         this.problemSolvingAverageTime = (double) this.problemSolvingTotalTime / problemsTriedTracked.size();
         this.viewsPerContent = (double) (this.contentsRepeated + contentsViewedTracked.size()) / contentsViewedTracked.size();
@@ -134,11 +137,13 @@ public class TrajectorySummary implements Serializable {
         this.LearningGoalsReachedTotal = learningGoalsReachedTracked.size();
         this.studentActionsTotal = studentActionsTracked.size();
         this.subSessionsTotal = subSessionsTracked.size();
+        this.actionsPerSubSessionAverage = (double) this.studentActionsTotal / this.subSessionsTotal;
         this.subSessionsTrackedJson = new Gson().toJson(subSessionsTracked);
         this.studentActionsTrackedJson = new Gson().toJson(studentActionsTracked);
         this.problemsTriedTrackedJson = new Gson().toJson(problemsTriedTracked);
         this.contentsViewedTrackedJson = new Gson().toJson(contentsViewedTracked);
         this.learningGoalsReachedTrackedJson = new Gson().toJson(learningGoalsReachedTracked);
+        context.close();
     }
 
     public Student getStudent() {
@@ -355,6 +360,14 @@ public class TrajectorySummary implements Serializable {
 
     public void setTimeEnd(Date timeEnd) {
         this.timeEnd = timeEnd;
+    }
+
+    public Double getActionsPerSubSessionAverage() {
+        return actionsPerSubSessionAverage;
+    }
+
+    public void setActionsPerSubSessionAverage(Double actionsPerSubSessionAverage) {
+        this.actionsPerSubSessionAverage = actionsPerSubSessionAverage;
     }
     
 }
