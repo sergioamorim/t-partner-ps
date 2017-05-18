@@ -71,7 +71,7 @@ public class TrajectorySummary implements Serializable {
         List<AccessSession> accessSessions = accessSessionDAO.findByStudent(this.student);
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
         StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
-        context.close();
+        
         List<SubSession> subSessions = new ArrayList<SubSession>();
         List<SubSession> subSessionsTracked = new ArrayList<SubSession>();
         List<StudentAction> studentActionsTracked = new ArrayList<StudentAction>();
@@ -123,6 +123,7 @@ public class TrajectorySummary implements Serializable {
                         learningGoalsReachedTracked.add(studentAction.getlGoalCurriculum());
                     }
                 }
+                context.close();
             }
         }
         this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / problemsTriedTracked.size();
