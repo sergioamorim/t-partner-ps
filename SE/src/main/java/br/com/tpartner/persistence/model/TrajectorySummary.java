@@ -8,16 +8,12 @@ package br.com.tpartner.persistence.model;
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
-import br.com.tpartner.persistence.model.AccessSession;
-import br.com.tpartner.persistence.model.Student;
-import br.com.tpartner.persistence.model.StudentAction;
-import br.com.tpartner.persistence.model.SubSession;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -26,26 +22,31 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 
 public class TrajectorySummary implements Serializable {
-    private final Student student;
+    private Student student;
     private Integer hitsTotal;
     private Integer failsTotal;
+    private Integer problemsTriedTotal;
+    private Integer contentsViewedTotal;
     private Integer problemSolvingTotalTime;
-    private List<String> contentsViewed;
     private Integer contentViewTotalTime;
-    private Double contentViewAverageTime;
-    private String lastLevelReached;
     private Integer newLevelsReached;
-    private List<String> problemsTried;
+    private Integer dummyTestQuestionsDone;
+    private Integer LearningGoalsReachedTotal;
+    private Integer subSessionsTotal;
+    private Integer studentActionsTotal;
+    private Integer contentsRepeated;
+    private Integer problemsRepeated;
     private Double triesToHitAverage;
     private Double viewsPerContent;
     private Double triesPerProblem;
-    private Integer dummyTestQuestionsDone;
-    private List<String> learningGoalsReached;
-    private List<SubSession> subSessions;
-    private List<StudentAction> studentActions;
-    private Integer contentsRepeated;
-    private Integer problemsRepeated;
     private Double problemSolvingAverageTime;
+    private Double contentViewAverageTime;
+    private String lastLevelReached;
+    private String subSessionsTrackedJson;
+    private String studentActionsTrackedJson;
+    private String problemsTriedTrackedJson;
+    private String contentsViewedTrackedJson;
+    private String learningGoalsReachedTrackedJson;
     private Date timeStart;
     private Date timeEnd;
 
@@ -60,42 +61,8 @@ public class TrajectorySummary implements Serializable {
         this.contentsRepeated = 0;
         this.problemsRepeated = 0;
         this.newLevelsReached = 0;
-        this.triesToHitAverage = 0.0;
         this.dummyTestQuestionsDone = 0;
-        this.lastLevelReached = "?";
-        this.contentsViewed = new ArrayList<String>();
-        this.problemsTried = new ArrayList<String>();
-        this.learningGoalsReached = new ArrayList<String>();
-        this.subSessions = new ArrayList<SubSession>();
-        this.studentActions = new ArrayList<StudentAction>();
         this.run();
-        this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / this.problemsTried.size();
-        this.contentViewAverageTime = (double) this.contentViewTotalTime / this.contentsViewed.size();
-        this.problemSolvingAverageTime = (double) this.problemSolvingTotalTime / this.problemsTried.size();
-        this.viewsPerContent = (double) (this.contentsRepeated + this.contentsViewed.size()) / this.contentsViewed.size();
-        this.triesPerProblem = (double) (this.problemsRepeated + this.problemsTried.size()) / this.problemsTried.size();
-        System.out.println(student);
-        System.out.println(timeStart);
-        System.out.println(timeEnd);
-        System.out.println(hitsTotal);
-        System.out.println(failsTotal);
-        System.out.println(problemSolvingAverageTime);
-        System.out.println(problemSolvingTotalTime);
-        System.out.println(contentViewAverageTime);
-        System.out.println(contentViewTotalTime);
-        System.out.println(contentsRepeated);
-        System.out.println(problemsRepeated);
-        System.out.println(newLevelsReached);
-        System.out.println(triesPerProblem);
-        System.out.println(triesToHitAverage);
-        System.out.println(dummyTestQuestionsDone);
-        System.out.println(lastLevelReached);
-        System.out.println(contentsViewed);
-        System.out.println(problemsTried);
-        System.out.println(learningGoalsReached);
-        System.out.println(subSessions);
-        System.out.println(studentActions);
-        System.out.println(viewsPerContent);
     }
 
     private void run() {
@@ -104,7 +71,13 @@ public class TrajectorySummary implements Serializable {
         List<AccessSession> accessSessions = accessSessionDAO.findByStudent(this.student);
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
         StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
+        context.close();
         List<SubSession> subSessions = new ArrayList<SubSession>();
+        List<SubSession> subSessionsTracked = new ArrayList<SubSession>();
+        List<StudentAction> studentActionsTracked = new ArrayList<StudentAction>();
+        List<String> problemsTriedTracked = new ArrayList<String>();
+        List<String> contentsViewedTracked = new ArrayList<String>();
+        List<String> learningGoalsReachedTracked = new ArrayList<String>();
         for (AccessSession accessSession : accessSessions) {
             if (accessSession.getTimeStart().before(this.timeEnd)) {
                 subSessions.addAll(subSessionDAO.findByAccessSession(accessSession));
@@ -112,9 +85,9 @@ public class TrajectorySummary implements Serializable {
         }
         for (SubSession subSession : subSessions) {
             if(subSession.getTimeStart().after(this.timeStart) && subSession.getTimeStart().before(this.timeEnd)) {
-                this.subSessions.add(subSession);
+                subSessionsTracked.add(subSession);
                 for (StudentAction studentAction : studentActionDAO.findBySubSession(subSession)) {
-                    this.studentActions.add(studentAction);
+                    studentActionsTracked.add(studentAction);
                     if (studentAction.getProblemCorrectlyDone().equals("1") || studentAction.getProblemCorrectlyDone().equals("0")) {
                         if(studentAction.getProblemCorrectlyDone().equals("1")) {
                             this.hitsTotal++;
@@ -122,8 +95,8 @@ public class TrajectorySummary implements Serializable {
                         else {
                             this.failsTotal++;
                         }
-                        if (!this.problemsTried.contains(studentAction.getProblemId())) {
-                            this.problemsTried.add(studentAction.getProblemId());
+                        if (!problemsTriedTracked.contains(studentAction.getProblemId())) {
+                            problemsTriedTracked.add(studentAction.getProblemId());
                         }
                         else {
                             this.problemsRepeated++;
@@ -131,8 +104,8 @@ public class TrajectorySummary implements Serializable {
                         this.problemSolvingTotalTime += Integer.parseInt(studentAction.getProblemResponseTime());
                     }
                     else if (!studentAction.getContentId().equals("*")) {
-                        if (!this.contentsViewed.contains(studentAction.getContentId())) {
-                            this.contentsViewed.add(studentAction.getContentId());
+                        if (!contentsViewedTracked.contains(studentAction.getContentId())) {
+                            contentsViewedTracked.add(studentAction.getContentId());
                         }
                         else {
                             this.contentsRepeated++;
@@ -147,10 +120,240 @@ public class TrajectorySummary implements Serializable {
                         this.dummyTestQuestionsDone++;
                     }
                     else if (studentAction.getType().equals("LEARNING_GOAL")) {
-                        this.learningGoalsReached.add(studentAction.getlGoalCurriculum());
+                        learningGoalsReachedTracked.add(studentAction.getlGoalCurriculum());
                     }
                 }
             }
         }
+        this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / problemsTriedTracked.size();
+        this.contentViewAverageTime = (double) this.contentViewTotalTime / contentsViewedTracked.size();
+        this.problemSolvingAverageTime = (double) this.problemSolvingTotalTime / problemsTriedTracked.size();
+        this.viewsPerContent = (double) (this.contentsRepeated + contentsViewedTracked.size()) / contentsViewedTracked.size();
+        this.triesPerProblem = (double) (this.problemsRepeated + problemsTriedTracked.size()) / problemsTriedTracked.size();
+        this.LearningGoalsReachedTotal = learningGoalsReachedTracked.size();
+        this.studentActionsTotal = studentActionsTracked.size();
+        this.subSessionsTotal = subSessionsTracked.size();
+        this.subSessionsTrackedJson = new Gson().toJson(subSessionsTracked);
+        this.studentActionsTrackedJson = new Gson().toJson(studentActionsTracked);
+        this.problemsTriedTrackedJson = new Gson().toJson(problemsTriedTracked);
+        this.contentsViewedTrackedJson = new Gson().toJson(contentsViewedTracked);
+        this.learningGoalsReachedTrackedJson = new Gson().toJson(learningGoalsReachedTracked);
     }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Integer getHitsTotal() {
+        return hitsTotal;
+    }
+
+    public void setHitsTotal(Integer hitsTotal) {
+        this.hitsTotal = hitsTotal;
+    }
+
+    public Integer getFailsTotal() {
+        return failsTotal;
+    }
+
+    public void setFailsTotal(Integer failsTotal) {
+        this.failsTotal = failsTotal;
+    }
+
+    public Integer getProblemsTriedTotal() {
+        return problemsTriedTotal;
+    }
+
+    public void setProblemsTriedTotal(Integer problemsTriedTotal) {
+        this.problemsTriedTotal = problemsTriedTotal;
+    }
+
+    public Integer getContentsViewedTotal() {
+        return contentsViewedTotal;
+    }
+
+    public void setContentsViewedTotal(Integer contentsViewedTotal) {
+        this.contentsViewedTotal = contentsViewedTotal;
+    }
+
+    public Integer getProblemSolvingTotalTime() {
+        return problemSolvingTotalTime;
+    }
+
+    public void setProblemSolvingTotalTime(Integer problemSolvingTotalTime) {
+        this.problemSolvingTotalTime = problemSolvingTotalTime;
+    }
+
+    public Integer getContentViewTotalTime() {
+        return contentViewTotalTime;
+    }
+
+    public void setContentViewTotalTime(Integer contentViewTotalTime) {
+        this.contentViewTotalTime = contentViewTotalTime;
+    }
+
+    public Integer getNewLevelsReached() {
+        return newLevelsReached;
+    }
+
+    public void setNewLevelsReached(Integer newLevelsReached) {
+        this.newLevelsReached = newLevelsReached;
+    }
+
+    public Integer getDummyTestQuestionsDone() {
+        return dummyTestQuestionsDone;
+    }
+
+    public void setDummyTestQuestionsDone(Integer dummyTestQuestionsDone) {
+        this.dummyTestQuestionsDone = dummyTestQuestionsDone;
+    }
+
+    public Integer getLearningGoalsReachedTotal() {
+        return LearningGoalsReachedTotal;
+    }
+
+    public void setLearningGoalsReachedTotal(Integer LearningGoalsReachedTotal) {
+        this.LearningGoalsReachedTotal = LearningGoalsReachedTotal;
+    }
+
+    public Integer getSubSessionsTotal() {
+        return subSessionsTotal;
+    }
+
+    public void setSubSessionsTotal(Integer subSessionsTotal) {
+        this.subSessionsTotal = subSessionsTotal;
+    }
+
+    public Integer getStudentActionsTotal() {
+        return studentActionsTotal;
+    }
+
+    public void setStudentActionsTotal(Integer studentActionsTotal) {
+        this.studentActionsTotal = studentActionsTotal;
+    }
+
+    public Integer getContentsRepeated() {
+        return contentsRepeated;
+    }
+
+    public void setContentsRepeated(Integer contentsRepeated) {
+        this.contentsRepeated = contentsRepeated;
+    }
+
+    public Integer getProblemsRepeated() {
+        return problemsRepeated;
+    }
+
+    public void setProblemsRepeated(Integer problemsRepeated) {
+        this.problemsRepeated = problemsRepeated;
+    }
+
+    public Double getTriesToHitAverage() {
+        return triesToHitAverage;
+    }
+
+    public void setTriesToHitAverage(Double triesToHitAverage) {
+        this.triesToHitAverage = triesToHitAverage;
+    }
+
+    public Double getViewsPerContent() {
+        return viewsPerContent;
+    }
+
+    public void setViewsPerContent(Double viewsPerContent) {
+        this.viewsPerContent = viewsPerContent;
+    }
+
+    public Double getTriesPerProblem() {
+        return triesPerProblem;
+    }
+
+    public void setTriesPerProblem(Double triesPerProblem) {
+        this.triesPerProblem = triesPerProblem;
+    }
+
+    public Double getProblemSolvingAverageTime() {
+        return problemSolvingAverageTime;
+    }
+
+    public void setProblemSolvingAverageTime(Double problemSolvingAverageTime) {
+        this.problemSolvingAverageTime = problemSolvingAverageTime;
+    }
+
+    public Double getContentViewAverageTime() {
+        return contentViewAverageTime;
+    }
+
+    public void setContentViewAverageTime(Double contentViewAverageTime) {
+        this.contentViewAverageTime = contentViewAverageTime;
+    }
+
+    public String getLastLevelReached() {
+        return lastLevelReached;
+    }
+
+    public void setLastLevelReached(String lastLevelReached) {
+        this.lastLevelReached = lastLevelReached;
+    }
+
+    public String getSubSessionsTrackedJson() {
+        return subSessionsTrackedJson;
+    }
+
+    public void setSubSessionsTrackedJson(String subSessionsTrackedJson) {
+        this.subSessionsTrackedJson = subSessionsTrackedJson;
+    }
+
+    public String getStudentActionsTrackedJson() {
+        return studentActionsTrackedJson;
+    }
+
+    public void setStudentActionsTrackedJson(String studentActionsTrackedJson) {
+        this.studentActionsTrackedJson = studentActionsTrackedJson;
+    }
+
+    public String getProblemsTriedTrackedJson() {
+        return problemsTriedTrackedJson;
+    }
+
+    public void setProblemsTriedTrackedJson(String problemsTriedTrackedJson) {
+        this.problemsTriedTrackedJson = problemsTriedTrackedJson;
+    }
+
+    public String getContentsViewedTrackedJson() {
+        return contentsViewedTrackedJson;
+    }
+
+    public void setContentsViewedTrackedJson(String contentsViewedTrackedJson) {
+        this.contentsViewedTrackedJson = contentsViewedTrackedJson;
+    }
+
+    public String getLearningGoalsReachedTrackedJson() {
+        return learningGoalsReachedTrackedJson;
+    }
+
+    public void setLearningGoalsReachedTrackedJson(String learningGoalsReachedTrackedJson) {
+        this.learningGoalsReachedTrackedJson = learningGoalsReachedTrackedJson;
+    }
+
+    public Date getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(Date timeStart) {
+        this.timeStart = timeStart;
+    }
+
+    public Date getTimeEnd() {
+        return timeEnd;
+    }
+
+    public void setTimeEnd(Date timeEnd) {
+        this.timeEnd = timeEnd;
+    }
+    
 }
