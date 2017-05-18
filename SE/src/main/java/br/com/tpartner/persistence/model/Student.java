@@ -6,11 +6,8 @@
 package br.com.tpartner.persistence.model;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -22,9 +19,6 @@ import javax.persistence.Table;
 public class Student implements Serializable {
     @Id
     private Long id;
-    
-    @OneToMany(mappedBy="student", cascade = CascadeType.ALL)
-    private List<AccessSession> accessSessions;
     
     public Student(){
     }
@@ -41,12 +35,4 @@ public class Student implements Serializable {
         this.id = id;
     }
 
-    public List<AccessSession> getAccessSessions() {
-        return accessSessions;
-    }
-
-    public void setAccessSessions(List<AccessSession> accessSessions) {
-        this.accessSessions = accessSessions;
-    }
-    
 }
