@@ -89,7 +89,7 @@ public class StudentCRUDImplementation implements StudentCRUD {
     public TrajectorySummary getSummary(Long studentId, String timeStartString, String timeEndString){
         Session session = getCurrentSession();
         Student student = this.findById(studentId);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date timeStart = null;
         Date timeEnd = null;
         TrajectorySummary trajectorySummary = null;
