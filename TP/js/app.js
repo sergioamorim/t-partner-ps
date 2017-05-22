@@ -1,4 +1,4 @@
-var app = angular.module('TP', [ 'ngRoute', 'controllers']);
+var app = angular.module('TP', [ 'ngRoute', 'controllers', 'angularModalService']);
 app.run(function ($rootScope) {
     
 });
