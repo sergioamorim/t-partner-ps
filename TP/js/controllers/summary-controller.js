@@ -7,6 +7,11 @@ function summary_controller($scope, $filter, summaryAPI) {
     $scope.summaryData = [];
     $scope.totalSummaryData = undefined;
     $scope.summaryInterval = undefined;
+    $scope.clearData = function() {
+        $scope.summaryData = [];
+        $scope.totalSummaryData = undefined;
+        $scope.summaryInterval = undefined;
+    }
     $scope.requestSummary = function(requestData) {
         requestDateFormat = "yyyy-MM-dd";
         dateStart = requestData.dateStart;
