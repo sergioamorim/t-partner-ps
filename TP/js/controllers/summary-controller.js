@@ -1,4 +1,4 @@
-function summary_controller($scope, $filter, summaryAPI) {
+function summary_controller($scope, $filter, ModalService, summaryAPI) {
     $scope.requestData = {
         studentId: undefined,
         dateStart: undefined,
@@ -52,13 +52,23 @@ function summary_controller($scope, $filter, summaryAPI) {
                 summaryAPI.getSummary(requestData.studentId, $filter('date')(dateStart, requestDateFormat), $filter('date')(dateEnd, requestDateFormat)).success(function(data) {
                     $scope.summaryData.push(data);
                 });
-                console.log(dateStart);
                 dateStart = new Date(dateStart.valueOf()+86400000);
-                console.log(dateStart);
             }
         }
         summaryAPI.getSummary(requestData.studentId, $filter('date')(requestData.dateStart, requestDateFormat), $filter('date')(dateEndOriginal, requestDateFormat)).success(function(data){
             $scope.totalSummaryData = data;
+        });
+    };
+    $scope.showLearningGoals = function(learningGoals) {
+        ModalService.showModal({
+            templateUrl: '../../view/modals/learning-goals-modal.html',
+            controller: "LearningGoalsModal",
+            inputs: {
+                data: learningGoals
+            }
+        }).then(function(modal) {
+            modal.element.modal();
+            modal.close();
         });
     };
 }
