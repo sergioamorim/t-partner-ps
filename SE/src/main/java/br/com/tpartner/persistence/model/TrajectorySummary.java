@@ -32,7 +32,7 @@ public class TrajectorySummary implements Serializable {
     private Integer contentViewTotalTime;
     private Integer newLevelsReached;
     private Integer dummyTestQuestionsDone;
-    private Integer LearningGoalsReachedTotal;
+    private Integer learningGoalsReachedTotal;
     private Integer subSessionsTotal;
     private Integer studentActionsTotal;
     private Integer contentsRepeated;
@@ -134,7 +134,7 @@ public class TrajectorySummary implements Serializable {
         this.problemSolvingAverageTime = (double) this.problemSolvingTotalTime / this.problemsTriedTotal;
         this.viewsPerContent = (double) (this.contentsRepeated + this.contentsViewedTotal) / this.contentsViewedTotal;
         this.triesPerProblem = (double) (this.problemsRepeated + this.problemsTriedTotal) / this.problemsTriedTotal;
-        this.LearningGoalsReachedTotal = learningGoalsReachedTracked.size();
+        this.learningGoalsReachedTotal = learningGoalsReachedTracked.size();
         this.studentActionsTotal = studentActionsTracked.size();
         this.subSessionsTotal = subSessionsTracked.size();
         this.actionsPerSubSessionAverage = (double) this.studentActionsTotal / this.subSessionsTotal;
@@ -219,11 +219,11 @@ public class TrajectorySummary implements Serializable {
     }
 
     public Integer getLearningGoalsReachedTotal() {
-        return LearningGoalsReachedTotal;
+        return learningGoalsReachedTotal;
     }
 
-    public void setLearningGoalsReachedTotal(Integer LearningGoalsReachedTotal) {
-        this.LearningGoalsReachedTotal = LearningGoalsReachedTotal;
+    public void setLearningGoalsReachedTotal(Integer learningGoalsReachedTotal) {
+        this.learningGoalsReachedTotal = learningGoalsReachedTotal;
     }
 
     public Integer getSubSessionsTotal() {
