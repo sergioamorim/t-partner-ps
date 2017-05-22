@@ -129,7 +129,7 @@ public class TrajectorySummary implements Serializable {
         }
         this.problemsTriedTotal = this.failsTotal + this.hitsTotal;
         this.contentsViewedTotal = contentsViewedTracked.size();
-        this.triesToHitAverage = (double) (this.hitsTotal+this.failsTotal) / this.problemsTriedTotal;
+        this.triesToHitAverage = (double) this.problemsTriedTotal / this.hitsTotal;
         this.contentViewAverageTime = (double) this.contentViewTotalTime / this.contentsViewedTotal;
         this.problemSolvingAverageTime = (double) this.problemSolvingTotalTime / this.problemsTriedTotal;
         this.viewsPerContent = (double) (this.contentsRepeated + this.contentsViewedTotal) / this.contentsViewedTotal;
