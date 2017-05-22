@@ -1,4 +1,65 @@
 <div ng-controller="SummaryController">
 	<h2>Summary</h2>
-	{{summaryData.hitsTotal}}
+    <form>
+        <input ng-model="requestData.studentId" type="number" ngMinlength="1" ngRequired="true" required />
+        <input ng-model="requestData.dateStart" type="date" placeholder="dd-MM-yyyy" min="2000-01-01" max="{{requestData.dateEnd | date: yyyy-MM-dd}}" ngRequired="true" required />
+        <input ng-model="requestData.dateEnd" type="date" placeholder="dd-MM-yyyy" min="{{requestData.dateStart | date: yyyy-MM-dd}}" max="2099-12-31" ngRequired="true" required />
+        <input type="submit" ng-click="requestSummary(requestData)" value="Go" />
+    </form>
+    <div>
+        <h4><span>Total:</span></h4>
+        <span ng-show="totalSummaryData.studentActionsTotal == 0">nothing</span>
+        <span ng-show="totalSummaryData.studentActionsTotal != 0">
+            Questions hits: {{ totalSummaryData.hitsTotal }} <br />
+            Questions fails: {{ totalSummaryData.failsTotal }} <br />
+            Problem solving tries: {{ totalSummaryData.problemsTriedTotal }} <br />
+            Tries per problem: {{ totalSummaryData.triesPerProblem }} <br />
+            Tries to hit: {{ totalSummaryData.triesToHitAverage }} <br />
+            Problems repeated: {{ totalSummaryData.problemsRepeated }} <br />
+            Time solving problems: {{ totalSummaryData.problemSolvingTotalTime | millSecondsToTimeString }} <br />
+            Time per problem: {{ totalSummaryData.problemSolvingAverageTime | millSecondsToTimeString }} <br />
+            Contents viewed: {{ totalSummaryData.contentsViewedTotal }} <br />
+            Contents repeated: {{ totalSummaryData.contentsRepeated }} <br />
+            Views per content: {{ totalSummaryData.viewsPerContent }} <br />
+            Time viewing contents: {{ totalSummaryData.contentViewTotalTime | millSecondsToTimeString }} <br />
+            Time per content: {{ totalSummaryData.contentViewAverageTime | millSecondsToTimeString }} <br />
+            New levels reached: {{ totalSummaryData.newLevelsReached }} <br />
+            Last level reached: {{ totalSummaryData.lastLevelReached }} <br />
+            Dummy tests questions done: {{ totalSummaryData.dummyTestQuestionsDone }} <br />
+            Learning goals reached: {{ totalSummaryData.learningGoalsReachedTotal }} <br />
+            Actions: {{ totalSummaryData.studentActionsTotal }} <br />
+            Access: {{ totalSummaryData.subSessionsTotal }} <br />
+            Actions per access: {{ totalSummaryData.actionsPerSubSessionAverage }} <br />
+        </span>
+    </div>
+    <div ng-repeat="summaryDataField in summaryData | orderBy: 'timeStart'">
+        <hr />
+        <h4><span ng-show="summaryInterval == 'day'">Day: </span>
+        <span ng-show="summaryInterval == 'week'">Week: </span>
+        <span ng-show="summaryInterval == 'month'">Month: </span>
+        {{ summaryDataField.timeStart | date: 'yyyy-MM-dd' }}</h4>
+        <span ng-show="summaryDataField.studentActionsTotal == 0">nothing</span>
+        <span ng-show="summaryDataField.studentActionsTotal != 0">
+            Questions hits: {{ summaryDataField.hitsTotal }} <br />
+            Questions fails: {{ summaryDataField.failsTotal }} <br />
+            Problem solving tries: {{ summaryDataField.problemsTriedTotal }} <br />
+            Tries per problem: {{ summaryDataField.triesPerProblem }} <br />
+            Tries to hit: {{ summaryDataField.triesToHitAverage }} <br />
+            Problems repeated: {{ summaryDataField.problemsRepeated }} <br />
+            Time solving problems: {{ summaryDataField.problemSolvingTotalTime | millSecondsToTimeString }} <br />
+            Time per problem: {{ summaryDataField.problemSolvingAverageTime | millSecondsToTimeString }} <br />
+            Contents viewed: {{ summaryDataField.contentsViewedTotal }} <br />
+            Contents repeated: {{ summaryDataField.contentsRepeated }} <br />
+            Views per content: {{ summaryDataField.viewsPerContent }} <br />
+            Time viewing contents: {{ summaryDataField.contentViewTotalTime | millSecondsToTimeString }} <br />
+            Time per content: {{ summaryDataField.contentViewAverageTime | millSecondsToTimeString }} <br />
+            New levels reached: {{ summaryDataField.newLevelsReached }} <br />
+            Last level reached: {{ summaryDataField.lastLevelReached }} <br />
+            Dummy tests questions done: {{ summaryDataField.dummyTestQuestionsDone }} <br />
+            Learning goals reached: {{ summaryDataField.learningGoalsReachedTotal }} <br />
+            Actions: {{ summaryDataField.studentActionsTotal }} <br />
+            Access: {{ summaryDataField.subSessionsTotal }} <br />
+            Actions per access: {{ summaryDataField.actionsPerSubSessionAverage }}
+        </span>
+    </div>
 </div>
