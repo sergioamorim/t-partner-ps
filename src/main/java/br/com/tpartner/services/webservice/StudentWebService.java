@@ -9,6 +9,7 @@ import br.com.tpartner.persistence.model.Student;
 import br.com.tpartner.persistence.model.TrajectorySummary;
 import br.com.tpartner.services.facade.StudentFacade;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,9 +61,9 @@ public class StudentWebService {
         return this.studentFacade.findAll();
     }
     
-    @RequestMapping(value = "/summary", method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> getSummary(@RequestParam(value = "student_id", required = true) Long studentId, @RequestParam(value = "time_start", required = true) String timeStartString, @RequestParam(value = "time_end", required = true) String timeEndString) {
-        TrajectorySummary a = this.studentFacade.getSummary(studentId, timeStartString, timeEndString);
+    @RequestMapping(value = "/summary", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<Serializable> getSummary(@RequestParam(value = "students", required = true) List<Student> students, @RequestParam(value = "startDate", required = true) Date startDate, @RequestParam(value = "endDate", required = true) Date endDate) {
+        TrajectorySummary a = this.studentFacade.getSummary(students, startDate, endDate);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
 }

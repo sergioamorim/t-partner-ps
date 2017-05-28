@@ -86,7 +86,7 @@ public class StudentCRUDImplementation implements StudentCRUD {
     }
     
     @Override
-    public TrajectorySummary getSummary(Long studentId, String timeStartString, String timeEndString){
+    public TrajectorySummary getSummary(List<Student> students, Date startDate, Date endDate){
         Session session = getCurrentSession();
         Student student = this.findById(studentId);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

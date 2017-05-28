@@ -7,6 +7,7 @@ package br.com.tpartner.persistence.crud;
 
 import br.com.tpartner.persistence.model.Student;
 import br.com.tpartner.persistence.model.TrajectorySummary;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,6 +23,6 @@ public interface StudentCRUD {
     public Student findById(Long studentId);
     public List<Student> findAll();
 
-    public TrajectorySummary getSummary(Long studentId, String timeStartString, String timeEndString);
+    public TrajectorySummary getSummary(List<Student> students, Date startDate, Date endDate);
 }
 
