@@ -7,11 +7,10 @@ package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.persistence.model.TrajectorySummariesRequest;
 import br.com.tpartner.persistence.model.TrajectorySummary;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,25 +85,22 @@ public class StudentCRUDImplementation implements StudentCRUD {
     }
     
     @Override
-    public TrajectorySummary getSummary(List<Student> students, Date startDate, Date endDate){
+    public List<TrajectorySummary> getSummaries(
+            TrajectorySummariesRequest trajectorySummariesRequest){
         Session session = getCurrentSession();
-        Student student = this.findById(studentId);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date timeStart = null;
-        Date timeEnd = null;
-        TrajectorySummary trajectorySummary = null;
-        try {
-            timeStart = dateFormat.parse(timeStartString);
-            timeEnd = dateFormat.parse(timeEndString);
-            trajectorySummary = new TrajectorySummary(student, timeStart, timeEnd);
-        } catch (ParseException ex) {
-            Logger.getLogger(StudentCRUDImplementation.class.getName()).
-                    log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(StudentCRUDImplementation.class.getName()).
-                    log(Level.SEVERE, null, ex);
+        List<TrajectorySummary> trajectorySummaries;
+        trajectorySummaries = new ArrayList<TrajectorySummary>();
+        for (Student student : trajectorySummariesRequest.getStudents()) {
+            try {
+                trajectorySummaries.add(new TrajectorySummary(student,
+                        trajectorySummariesRequest.getStartDate(),
+                        trajectorySummariesRequest.getEndDate()));
+            } catch (IOException ex) {
+                Logger.getLogger(StudentCRUDImplementation.class.getName()).
+                        log(Level.SEVERE, null, ex);
+            }
         }
-        return trajectorySummary;
+        return trajectorySummaries;
     }
     
 }

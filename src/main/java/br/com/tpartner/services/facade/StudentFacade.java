@@ -6,8 +6,8 @@
 package br.com.tpartner.services.facade;
 
 import br.com.tpartner.persistence.model.Student;
+import br.com.tpartner.persistence.model.TrajectorySummariesRequest;
 import br.com.tpartner.persistence.model.TrajectorySummary;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,5 +23,6 @@ public interface StudentFacade {
     public Student findById(Long studentId);
     public List<Student> findAll();
 
-    public TrajectorySummary getSummary(List<Student> students, Date startDate, Date endDate);
+    public List<TrajectorySummary> getSummaries(
+            TrajectorySummariesRequest trajectorySummariesRequest);
 }
