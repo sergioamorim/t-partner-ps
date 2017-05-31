@@ -8,7 +8,6 @@ package br.com.tpartner.persistence.model;
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 
 public class TrajectorySummary implements Serializable {
-    private Student student;
+    private final Student student;
     private Integer hitsTotal;
     private Integer failsTotal;
     private Integer problemsTriedTotal;
@@ -44,13 +43,13 @@ public class TrajectorySummary implements Serializable {
     private Double contentViewAverageTime;
     private Double actionsPerSubSessionAverage;
     private String lastLevelReached;
-    private String subSessionsTrackedJson;
-    private String studentActionsTrackedJson;
-    private String problemsTriedTrackedJson;
-    private String contentsViewedTrackedJson;
-    private String learningGoalsReachedTrackedJson;
-    private Date timeStart;
-    private Date timeEnd;
+    private List<SubSession> subSessionsTracked;
+    private List<StudentAction> studentActionsTracked;
+    private List<String> problemsTriedTracked;
+    private List<String> contentsViewedTracked;
+    private List<String> learningGoalsReachedTracked;
+    private final Date timeStart;
+    private final Date timeEnd;
 
     public TrajectorySummary (Student student, Date timeStart, Date timeEnd) throws IOException {
         this.student = student;
@@ -75,11 +74,11 @@ public class TrajectorySummary implements Serializable {
         StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
         
         List<SubSession> subSessions = new ArrayList<SubSession>();
-        List<SubSession> subSessionsTracked = new ArrayList<SubSession>();
-        List<StudentAction> studentActionsTracked = new ArrayList<StudentAction>();
-        List<String> problemsTriedTracked = new ArrayList<String>();
-        List<String> contentsViewedTracked = new ArrayList<String>();
-        List<String> learningGoalsReachedTracked = new ArrayList<String>();
+        this.subSessionsTracked = new ArrayList<SubSession>();
+        this.studentActionsTracked = new ArrayList<StudentAction>();
+        this.problemsTriedTracked = new ArrayList<String>();
+        this.contentsViewedTracked = new ArrayList<String>();
+        this.learningGoalsReachedTracked = new ArrayList<String>();
         for (AccessSession accessSession : accessSessions) {
             if (accessSession.getTimeStart().before(this.timeEnd)) {
                 subSessions.addAll(subSessionDAO.findByAccessSession(accessSession));
@@ -138,11 +137,6 @@ public class TrajectorySummary implements Serializable {
         this.studentActionsTotal = studentActionsTracked.size();
         this.subSessionsTotal = subSessionsTracked.size();
         this.actionsPerSubSessionAverage = (double) this.studentActionsTotal / this.subSessionsTotal;
-        this.subSessionsTrackedJson = new Gson().toJson(subSessionsTracked);
-        this.studentActionsTrackedJson = new Gson().toJson(studentActionsTracked);
-        this.problemsTriedTrackedJson = new Gson().toJson(problemsTriedTracked);
-        this.contentsViewedTrackedJson = new Gson().toJson(contentsViewedTracked);
-        this.learningGoalsReachedTrackedJson = new Gson().toJson(learningGoalsReachedTracked);
         context.close();
     }
 
@@ -150,224 +144,112 @@ public class TrajectorySummary implements Serializable {
         return student;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
     public Integer getHitsTotal() {
         return hitsTotal;
-    }
-
-    public void setHitsTotal(Integer hitsTotal) {
-        this.hitsTotal = hitsTotal;
     }
 
     public Integer getFailsTotal() {
         return failsTotal;
     }
 
-    public void setFailsTotal(Integer failsTotal) {
-        this.failsTotal = failsTotal;
-    }
-
     public Integer getProblemsTriedTotal() {
         return problemsTriedTotal;
-    }
-
-    public void setProblemsTriedTotal(Integer problemsTriedTotal) {
-        this.problemsTriedTotal = problemsTriedTotal;
     }
 
     public Integer getContentsViewedTotal() {
         return contentsViewedTotal;
     }
 
-    public void setContentsViewedTotal(Integer contentsViewedTotal) {
-        this.contentsViewedTotal = contentsViewedTotal;
-    }
-
     public Integer getProblemSolvingTotalTime() {
         return problemSolvingTotalTime;
-    }
-
-    public void setProblemSolvingTotalTime(Integer problemSolvingTotalTime) {
-        this.problemSolvingTotalTime = problemSolvingTotalTime;
     }
 
     public Integer getContentViewTotalTime() {
         return contentViewTotalTime;
     }
 
-    public void setContentViewTotalTime(Integer contentViewTotalTime) {
-        this.contentViewTotalTime = contentViewTotalTime;
-    }
-
     public Integer getNewLevelsReached() {
         return newLevelsReached;
-    }
-
-    public void setNewLevelsReached(Integer newLevelsReached) {
-        this.newLevelsReached = newLevelsReached;
     }
 
     public Integer getDummyTestQuestionsDone() {
         return dummyTestQuestionsDone;
     }
 
-    public void setDummyTestQuestionsDone(Integer dummyTestQuestionsDone) {
-        this.dummyTestQuestionsDone = dummyTestQuestionsDone;
-    }
-
     public Integer getLearningGoalsReachedTotal() {
         return learningGoalsReachedTotal;
-    }
-
-    public void setLearningGoalsReachedTotal(Integer learningGoalsReachedTotal) {
-        this.learningGoalsReachedTotal = learningGoalsReachedTotal;
     }
 
     public Integer getSubSessionsTotal() {
         return subSessionsTotal;
     }
 
-    public void setSubSessionsTotal(Integer subSessionsTotal) {
-        this.subSessionsTotal = subSessionsTotal;
-    }
-
     public Integer getStudentActionsTotal() {
         return studentActionsTotal;
-    }
-
-    public void setStudentActionsTotal(Integer studentActionsTotal) {
-        this.studentActionsTotal = studentActionsTotal;
     }
 
     public Integer getContentsRepeated() {
         return contentsRepeated;
     }
 
-    public void setContentsRepeated(Integer contentsRepeated) {
-        this.contentsRepeated = contentsRepeated;
-    }
-
     public Integer getProblemsRepeated() {
         return problemsRepeated;
-    }
-
-    public void setProblemsRepeated(Integer problemsRepeated) {
-        this.problemsRepeated = problemsRepeated;
     }
 
     public Double getTriesToHitAverage() {
         return triesToHitAverage;
     }
 
-    public void setTriesToHitAverage(Double triesToHitAverage) {
-        this.triesToHitAverage = triesToHitAverage;
-    }
-
     public Double getViewsPerContent() {
         return viewsPerContent;
-    }
-
-    public void setViewsPerContent(Double viewsPerContent) {
-        this.viewsPerContent = viewsPerContent;
     }
 
     public Double getTriesPerProblem() {
         return triesPerProblem;
     }
 
-    public void setTriesPerProblem(Double triesPerProblem) {
-        this.triesPerProblem = triesPerProblem;
-    }
-
     public Double getProblemSolvingAverageTime() {
         return problemSolvingAverageTime;
-    }
-
-    public void setProblemSolvingAverageTime(Double problemSolvingAverageTime) {
-        this.problemSolvingAverageTime = problemSolvingAverageTime;
     }
 
     public Double getContentViewAverageTime() {
         return contentViewAverageTime;
     }
 
-    public void setContentViewAverageTime(Double contentViewAverageTime) {
-        this.contentViewAverageTime = contentViewAverageTime;
+    public Double getActionsPerSubSessionAverage() {
+        return actionsPerSubSessionAverage;
     }
 
     public String getLastLevelReached() {
         return lastLevelReached;
     }
 
-    public void setLastLevelReached(String lastLevelReached) {
-        this.lastLevelReached = lastLevelReached;
+    public List<SubSession> getSubSessionsTracked() {
+        return subSessionsTracked;
     }
 
-    public String getSubSessionsTrackedJson() {
-        return subSessionsTrackedJson;
+    public List<StudentAction> getStudentActionsTracked() {
+        return studentActionsTracked;
     }
 
-    public void setSubSessionsTrackedJson(String subSessionsTrackedJson) {
-        this.subSessionsTrackedJson = subSessionsTrackedJson;
+    public List<String> getProblemsTriedTracked() {
+        return problemsTriedTracked;
     }
 
-    public String getStudentActionsTrackedJson() {
-        return studentActionsTrackedJson;
+    public List<String> getContentsViewedTracked() {
+        return contentsViewedTracked;
     }
 
-    public void setStudentActionsTrackedJson(String studentActionsTrackedJson) {
-        this.studentActionsTrackedJson = studentActionsTrackedJson;
-    }
-
-    public String getProblemsTriedTrackedJson() {
-        return problemsTriedTrackedJson;
-    }
-
-    public void setProblemsTriedTrackedJson(String problemsTriedTrackedJson) {
-        this.problemsTriedTrackedJson = problemsTriedTrackedJson;
-    }
-
-    public String getContentsViewedTrackedJson() {
-        return contentsViewedTrackedJson;
-    }
-
-    public void setContentsViewedTrackedJson(String contentsViewedTrackedJson) {
-        this.contentsViewedTrackedJson = contentsViewedTrackedJson;
-    }
-
-    public String getLearningGoalsReachedTrackedJson() {
-        return learningGoalsReachedTrackedJson;
-    }
-
-    public void setLearningGoalsReachedTrackedJson(String learningGoalsReachedTrackedJson) {
-        this.learningGoalsReachedTrackedJson = learningGoalsReachedTrackedJson;
+    public List<String> getLearningGoalsReachedTracked() {
+        return learningGoalsReachedTracked;
     }
 
     public Date getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
-        this.timeStart = timeStart;
-    }
-
     public Date getTimeEnd() {
         return timeEnd;
-    }
-
-    public void setTimeEnd(Date timeEnd) {
-        this.timeEnd = timeEnd;
-    }
-
-    public Double getActionsPerSubSessionAverage() {
-        return actionsPerSubSessionAverage;
-    }
-
-    public void setActionsPerSubSessionAverage(Double actionsPerSubSessionAverage) {
-        this.actionsPerSubSessionAverage = actionsPerSubSessionAverage;
     }
     
 }
