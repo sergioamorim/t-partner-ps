@@ -37,6 +37,9 @@ public class NonMappedStudentAction extends StudentAction {
 
     @Column(name = "number_of_points")
     private final String numberOfPoints;
+    
+    @Column(name = "rs_id")
+    private final String rsId;
 
     @Column(name = "rs_type")
     private final String rsType;
@@ -74,7 +77,7 @@ public class NonMappedStudentAction extends StudentAction {
     public NonMappedStudentAction(Integer id, SubSession subSession, Date time,
             String type, String lGoalCurriculum, String lGoalValue,
             String dGoalDomain, String dGoalValue, String gamificationLevel,
-            String numberOfPoints, String rsType, String rsCompleted,
+            String numberOfPoints, String rsId, String rsType, String rsCompleted,
             String rsNCorrect, String rsNResources, String pbeResponseTime,
             String pbeAbilityScore, String pbeAbsoluteScore,
             String pbeNumCorrect, String pbeNumBlank, String pbeNumWorng,
@@ -87,6 +90,7 @@ public class NonMappedStudentAction extends StudentAction {
         this.dGoalValue = dGoalValue;
         this.gamificationLevel = gamificationLevel;
         this.numberOfPoints = numberOfPoints;
+        this.rsId = rsId;
         this.rsType = rsType;
         this.rsCompleted = rsCompleted;
         this.rsNCorrect = rsNCorrect;
@@ -127,11 +131,15 @@ public class NonMappedStudentAction extends StudentAction {
     public String getNumberOfPoints() {
         return numberOfPoints;
     }
+    
+    public String getRsId() {
+        return rsId;
+    }
 
     public String getRsType() {
         return rsType;
     }
-
+    
     public String getRsCompleted() {
         return rsCompleted;
     }
