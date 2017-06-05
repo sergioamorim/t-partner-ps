@@ -26,14 +26,26 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
 import br.com.tpartner.persistence.model.SubSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author sergio
  */
 public class CSVReader {
-    /* Testes */
+    
+    private static Map<String, Integer> CSVFileHeader = new HashMap<String, Integer>();
+    
+    
     public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, ParseException {
+        CSVFileHeader.put("STUDENT_ID", 0);
+        CSVFileHeader.put("LOG_TYPE", 1);
+        CSVFileHeader.put("TIME_STAMP", 2);
+        CSVFileHeader.put("PROBLEM_ID", 3);
+        CSVFileHeader.put("PROBLEM_CORRECTLY_DONE", 4);
+        CSVFileHeader.put("PROBLEM_RESPONSE_TIME", 5);
+        CSVFileHeader.put("CONTENT_ID", 6);
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
@@ -74,6 +86,7 @@ public class CSVReader {
     private StudentAction getStudentAction(List<String> line, SubSession subSession) throws ParseException{
         Date dateTime = getDateTime(line);
         StudentAction studentAction;
+        if (line.get(1))
         studentAction = new StudentAction(subSession, dateTime, line.get(1), line.get(3), line.get(4), 
                 line.get(5), line.get(6), line.get(7), line.get(8), 
                 line.get(9), line.get(10), line.get(11), line.get(12),
