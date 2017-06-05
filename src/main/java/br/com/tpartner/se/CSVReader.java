@@ -27,7 +27,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
 import br.com.tpartner.persistence.model.EducationalResource;
+import br.com.tpartner.persistence.model.NonMappedStudentAction;
 import br.com.tpartner.persistence.model.ProblemSolving;
+import br.com.tpartner.persistence.model.ResourceInteraction;
 import br.com.tpartner.persistence.model.SubSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +92,8 @@ public class CSVReader {
         this.createAccessSessions(csvMatrix, accessSessionDAO, studentDAO);
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
         StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
-        this.createStudentActions(csvMatrix, studentActionDAO, studentDAO, accessSessionDAO, subSessionDAO);
+        EducationalResourceCRUD educationalResourceDAO = context.getBean(EducationalResourceCRUD.class);
+        this.createStudentActions(csvMatrix, studentActionDAO, studentDAO, accessSessionDAO, subSessionDAO, educationalResourceDAO);
     }
     
     private SimpleDateFormat getTimestampType(String timeString){
@@ -160,17 +163,20 @@ public class CSVReader {
         else if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).equals(
                 "CONTENT_VIEW")) {
         
+            EducationalResource educationalResource = getEducationalResource(
+                    line.get(CSV_FILE_HEADER.get("CONTENT_ID")),
+                    educationalResourceDAO);
             
+            Integer timeSpent = Integer.parseInt(line.get(CSV_FILE_HEADER.get(
+                    "CONTENT_VIEW_TIME")));
+            
+            studentAction = new ResourceInteraction(subSession, dateTime,
+                    educationalResource, timeSpent);
             
         }
         else {
-            studentAction = new StudentAction(subSession, dateTime,
+            studentAction = new NonMappedStudentAction(subSession, dateTime,
                     line.get(CSV_FILE_HEADER.get("LOG_TYPE")),
-                    line.get(CSV_FILE_HEADER.get("PROBLEM_ID")),
-                    line.get(CSV_FILE_HEADER.get("PROBLEM_CORRECTLY_DONE")),
-                    line.get(CSV_FILE_HEADER.get("PROBLEM_RESPONSE_TIME")),
-                    line.get(CSV_FILE_HEADER.get("CONTENT_ID")),
-                    line.get(CSV_FILE_HEADER.get("CONTENT_VIEW_TIME")),
                     line.get(CSV_FILE_HEADER.get("LGOAL_CURRICULUM")),
                     line.get(CSV_FILE_HEADER.get("LGOAL_VALUE")),
                     line.get(CSV_FILE_HEADER.get("DGOAL_DOMAIN")),
@@ -272,14 +278,14 @@ public class CSVReader {
         return subSessionDAO.save(subSession);
     }
     
-    private void createStudentActions(List<List<String>> csvMatrix, StudentActionCRUD studentActionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO) throws ParseException{
+    private void createStudentActions(List<List<String>> csvMatrix, StudentActionCRUD studentActionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO, EducationalResourceCRUD educationalResourceDAO) throws ParseException{
         for (List<String> line : csvMatrix) {
             if (!line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains("USER_SESSION")&&!line.get(CSV_FILE_HEADER.get("STUDENT_ID")).contains("STUDENT_ID")) {
                 Student student = getStudent(line, studentDAO);
                 AccessSession accessSession = getAccessSession(line, accessSessionDAO, student);
                 if (accessSession != null) {
                     SubSession subSession = getSubSession(line, subSessionDAO, accessSession, studentActionDAO);
-                    StudentAction studentAction = getStudentAction(line, subSession);
+                    StudentAction studentAction = getStudentAction(line, subSession, educationalResourceDAO);
                     studentActionDAO.save(studentAction);
                 }
             }
