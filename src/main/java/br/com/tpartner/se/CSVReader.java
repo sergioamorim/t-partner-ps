@@ -35,17 +35,41 @@ import java.util.Map;
  */
 public class CSVReader {
     
-    private static Map<String, Integer> CSVFileHeader = new HashMap<String, Integer>();
+    private static final Integer SUB_SESSION_TIME_LIMIT = 180000; //milliseconds
+    private static final Map<String, Integer> CSV_FILE_HEADER =
+        new HashMap<String, Integer>() {
+            {
+                put("STUDENT_ID", 0);
+                put("LOG_TYPE", 1);
+                put("TIME_STAMP", 2);
+                put("PROBLEM_ID", 3);
+                put("PROBLEM_CORRECTLY_DONE", 4);
+                put("PROBLEM_RESPONSE_TIME", 5);
+                put("CONTENT_ID", 6);
+                put("CONTENT_VIEW_TIME", 7);
+                put("LGOAL_CURRICULUM", 8);
+                put("LGOAL_VALUE", 9);
+                put("DGOAL_DOMAIN", 10);
+                put("DGOAL_VALUE", 11);
+                put("GAMIFICATION_LEVEL", 12);
+                put("NUMBER_OF_POINTS", 13);
+                put("RS_ID", 14);
+                put("RS_TYPE", 15);
+                put("RS_COMPLETED", 16);
+                put("RS_N_CORRECT", 17);
+                put("RS_N_RESOURCES", 18);
+                put("PBE_RESPONSE_TIME", 19);
+                put("PBE_ABILITY_SCORE", 20);
+                put("PBE_ABSOLUTE_SCORE", 21);
+                put("PBE_NUM_CORRECT", 22);
+                put("PBE_NUM_BLANK", 23);
+                put("PBE_NUM_WRONG", 24);
+                put("ACTIVITY_LOOP_ID", 25);
+            }
+    };
     
     
     public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, ParseException {
-        CSVFileHeader.put("STUDENT_ID", 0);
-        CSVFileHeader.put("LOG_TYPE", 1);
-        CSVFileHeader.put("TIME_STAMP", 2);
-        CSVFileHeader.put("PROBLEM_ID", 3);
-        CSVFileHeader.put("PROBLEM_CORRECTLY_DONE", 4);
-        CSVFileHeader.put("PROBLEM_RESPONSE_TIME", 5);
-        CSVFileHeader.put("CONTENT_ID", 6);
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
@@ -78,21 +102,43 @@ public class CSVReader {
     }
     
     private Date getDateTime(List<String> line) throws ParseException {
-        SimpleDateFormat dateFormat = getTimestampType(line.get(2));
-        Date dateTime = dateFormat.parse(line.get(2));
+        String timeString = line.get(CSV_FILE_HEADER.get("TIME_STAMP"));
+        SimpleDateFormat dateFormat = getTimestampType(timeString);
+        Date dateTime = dateFormat.parse(timeString);
         return dateTime;
     }
     
     private StudentAction getStudentAction(List<String> line, SubSession subSession) throws ParseException{
         Date dateTime = getDateTime(line);
         StudentAction studentAction;
-        if (line.get(1))
-        studentAction = new StudentAction(subSession, dateTime, line.get(1), line.get(3), line.get(4), 
-                line.get(5), line.get(6), line.get(7), line.get(8), 
-                line.get(9), line.get(10), line.get(11), line.get(12),
-                line.get(13), line.get(14), line.get(15), line.get(16),
-                line.get(17), line.get(18), line.get(19), line.get(20),
-                line.get(21), line.get(22), line.get(23), line.get(24));
+        if (line.get(1)) {
+            studentAction = new StudentAction(subSession, dateTime,
+                    line.get(CSV_FILE_HEADER.get("LOG_TYPE")),
+                    line.get(CSV_FILE_HEADER.get("PROBLEM_ID")),
+                    line.get(CSV_FILE_HEADER.get("PROBLEM_CORRECTLY_DONE")),
+                    line.get(CSV_FILE_HEADER.get("PROBLEM_RESPONSE_TIME")),
+                    line.get(CSV_FILE_HEADER.get("CONTENT_ID")),
+                    line.get(CSV_FILE_HEADER.get("CONTENT_VIEW_TIME")),
+                    line.get(CSV_FILE_HEADER.get("LGOAL_CURRICULUM")),
+                    line.get(CSV_FILE_HEADER.get("LGOAL_VALUE")),
+                    line.get(CSV_FILE_HEADER.get("DGOAL_DOMAIN")),
+                    line.get(CSV_FILE_HEADER.get("DGOAL_VALUE")),
+                    line.get(CSV_FILE_HEADER.get("GAMIFICATION_LEVEL")),
+                    line.get(CSV_FILE_HEADER.get("NUMBER_OF_POINTS")),
+                    line.get(CSV_FILE_HEADER.get("RS_ID")),
+                    line.get(CSV_FILE_HEADER.get("RS_TYPE")),
+                    line.get(CSV_FILE_HEADER.get("RS_COMPLETED")),
+                    line.get(CSV_FILE_HEADER.get("RS_N_CORRECT")),
+                    line.get(CSV_FILE_HEADER.get("RS_N_RESOURCES")),
+                    line.get(CSV_FILE_HEADER.get("PBE_RESPONSE_TIME")),
+                    line.get(CSV_FILE_HEADER.get("PBE_ABILITY_SCORE")),
+                    line.get(CSV_FILE_HEADER.get("PBE_ABSOLUTE_SCORE")),
+                    line.get(CSV_FILE_HEADER.get("PBE_NUM_CORRECT")),
+                    line.get(CSV_FILE_HEADER.get("PBE_NUM_BLANK")),
+                    line.get(CSV_FILE_HEADER.get("PBE_NUM_WRONG")),
+                    line.get(CSV_FILE_HEADER.get("ACTIVITY_LOOP_ID"))
+            );
+        }
         return studentAction;
     }
     
@@ -102,16 +148,23 @@ public class CSVReader {
         return null;
     }
     
-    private Student getStudent(List<String> line, StudentCRUD studentDAO) {
-        if (this.getStudentId(line.get(0)) == null)
+    private Student getStudent(List<String> line, StudentCRUD studentDAO) {        
+        String studentIdString = line.get(CSV_FILE_HEADER.get("STUDENT_ID"));
+        
+        if (studentIdString == null) {
             return null;
-        Student student;
-        student = studentDAO.findById(this.getStudentId(line.get(0)));
-        if (student == null) {
-            student = new Student(this.getStudentId(line.get(0)));
-            studentDAO.save(student);
-            student = studentDAO.findById(this.getStudentId(line.get(0)));
         }
+        
+        Long studentId = this.getStudentId(studentIdString);
+        Student student;
+        student = studentDAO.findById(studentId);
+        
+        if (student == null) {
+            student = new Student(studentId);
+            studentDAO.save(student);
+            student = studentDAO.findById(studentId);
+        }
+        
         return student;
     }
     
@@ -130,7 +183,7 @@ public class CSVReader {
     
     private void createAccessSessions(List<List<String>> csvMatrix, AccessSessionCRUD accessSessionDAO, StudentCRUD studentDAO) throws ParseException {
         for (List<String> line : csvMatrix) {
-            if (line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
+            if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains("USER_SESSION")&&!line.get(CSV_FILE_HEADER.get("STUDENT_ID")).contains("STUDENT_ID")) {
                 Student student = getStudent(line, studentDAO);
                 AccessSession accessSession = new AccessSession(student, getDateTime(line));
                 accessSessionDAO.save(accessSession);
@@ -158,7 +211,7 @@ public class CSVReader {
             List<StudentAction> studentActions = studentActionDAO.findBySubSession(subSession);
             for (StudentAction studentAction : studentActions) {
                 Long diff = studentAction.getTime().getTime() - getDateTime(line).getTime();
-                if (diff > -1800000 &&  diff < 1800000) {
+                if (diff > -SUB_SESSION_TIME_LIMIT &&  diff < SUB_SESSION_TIME_LIMIT) {
                     return subSession;
                 }
             }
@@ -169,7 +222,7 @@ public class CSVReader {
     
     private void createStudentActions(List<List<String>> csvMatrix, StudentActionCRUD studentActionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO) throws ParseException{
         for (List<String> line : csvMatrix) {
-            if (!line.get(1).contains("USER_SESSION")&&!line.get(0).contains("STUDENT_ID")) {
+            if (!line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains("USER_SESSION")&&!line.get(CSV_FILE_HEADER.get("STUDENT_ID")).contains("STUDENT_ID")) {
                 Student student = getStudent(line, studentDAO);
                 AccessSession accessSession = getAccessSession(line, accessSessionDAO, student);
                 if (accessSession != null) {
