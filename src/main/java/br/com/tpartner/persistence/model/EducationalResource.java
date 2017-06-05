@@ -8,12 +8,14 @@ package br.com.tpartner.persistence.model;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  *
  * @author sergio
  */
 @Entity
+@Table(name = "educational_resource")
 public class EducationalResource implements Serializable {
     @Id
     private final String id;

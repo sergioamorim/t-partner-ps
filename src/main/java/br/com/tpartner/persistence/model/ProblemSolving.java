@@ -7,12 +7,14 @@ package br.com.tpartner.persistence.model;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  *
  * @author sergio
  */
 @Entity
+@Table(name = "problem_solving")
 public class ProblemSolving extends ResourceInteraction {
     
     private final Boolean correctlyDone;
