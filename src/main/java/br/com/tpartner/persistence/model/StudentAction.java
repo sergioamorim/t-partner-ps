@@ -39,7 +39,7 @@ public class StudentAction implements Serializable {
     @Column(name = "date_time")
     private final Date time;
     
-    public StudentAction(Integer id, SubSession subSession, Date time) {
+    public StudentAction(SubSession subSession, Date time) {
         this.subSession = subSession;
         this.time = time;
     }

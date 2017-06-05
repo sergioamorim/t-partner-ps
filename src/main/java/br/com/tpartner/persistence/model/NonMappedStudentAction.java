@@ -74,7 +74,7 @@ public class NonMappedStudentAction extends StudentAction {
     @Column(name = "activity_loop_id")
     private final String activityLoopId;
 
-    public NonMappedStudentAction(Integer id, SubSession subSession, Date time,
+    public NonMappedStudentAction(SubSession subSession, Date time,
             String type, String lGoalCurriculum, String lGoalValue,
             String dGoalDomain, String dGoalValue, String gamificationLevel,
             String numberOfPoints, String rsId, String rsType, String rsCompleted,
@@ -82,7 +82,7 @@ public class NonMappedStudentAction extends StudentAction {
             String pbeAbilityScore, String pbeAbsoluteScore,
             String pbeNumCorrect, String pbeNumBlank, String pbeNumWorng,
             String activityLoopId) {
-        super(id, subSession, time);
+        super(subSession, time);
         this.type = type;
         this.lGoalCurriculum = lGoalCurriculum;
         this.lGoalValue = lGoalValue;

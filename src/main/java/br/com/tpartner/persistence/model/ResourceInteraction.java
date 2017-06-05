@@ -24,8 +24,8 @@ public class ResourceInteraction extends StudentAction{
     @Column(name = "time_spent")
     private final Integer timeSpent;
     
-    public ResourceInteraction(Integer id, SubSession subSession, Date time, EducationalResource educationalResource, Integer timeSpent) {
-        super(id, subSession, time);
+    public ResourceInteraction(SubSession subSession, Date time, EducationalResource educationalResource, Integer timeSpent) {
+        super(subSession, time);
         this.educationalResource = educationalResource;
         this.timeSpent = timeSpent;
     }

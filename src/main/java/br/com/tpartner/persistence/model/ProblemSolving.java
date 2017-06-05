@@ -19,10 +19,10 @@ public class ProblemSolving extends ResourceInteraction {
     
     private final Boolean correctlyDone;
     
-    public ProblemSolving(Integer id, SubSession subSession, Date time,
+    public ProblemSolving(SubSession subSession, Date time,
             EducationalResource educationalResource, Boolean correctlyDone,
             Integer timeSpent) {
-        super(id, subSession, time, educationalResource,
+        super(subSession, time, educationalResource,
                 timeSpent);
         this.correctlyDone = correctlyDone;
     }
