@@ -6,6 +6,7 @@
 package br.com.tpartner.se;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
+import br.com.tpartner.persistence.crud.EducationalResourceCRUD;
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
 import br.com.tpartner.persistence.model.StudentAction;
@@ -25,6 +26,8 @@ import java.util.Date;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
+import br.com.tpartner.persistence.model.EducationalResource;
+import br.com.tpartner.persistence.model.ProblemSolving;
 import br.com.tpartner.persistence.model.SubSession;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,10 +111,59 @@ public class CSVReader {
         return dateTime;
     }
     
-    private StudentAction getStudentAction(List<String> line, SubSession subSession) throws ParseException{
+    private EducationalResource getEducationalResource(
+            String educationalResourceId,
+            EducationalResourceCRUD educationalResourceDAO) {
+        
+        EducationalResource educationalResource;
+        educationalResource =
+                educationalResourceDAO.findById(educationalResourceId);
+        
+        if (educationalResource == null) {
+            educationalResource =
+                    new EducationalResource(educationalResourceId);
+            educationalResourceDAO.save(educationalResource);
+            educationalResource =
+                    educationalResourceDAO.findById(educationalResourceId);
+        }
+        
+        return educationalResource;
+    }
+    
+    private StudentAction getStudentAction(List<String> line,
+            SubSession subSession,
+            EducationalResourceCRUD educationalResourceDAO)
+            throws ParseException {
+        
         Date dateTime = getDateTime(line);
         StudentAction studentAction;
-        if (line.get(1)) {
+        
+        if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).equals(
+                "PROBLEM_SOLVING")) {
+            
+            EducationalResource educationalResource = getEducationalResource(
+                    line.get(CSV_FILE_HEADER.get("PROBLEM_ID")),
+                    educationalResourceDAO);
+                    
+            Boolean correctlyDone = line.get(CSV_FILE_HEADER.get(
+                    "PROBLEM_CORRECTLY_DONE")).equals("1");
+            
+            Integer timeSpent = Integer.parseInt(line.get(CSV_FILE_HEADER.get(
+                    "PROBLEM_RESPONSE_TIME")));
+            
+            studentAction =
+                    new ProblemSolving(subSession, dateTime,
+                            educationalResource, correctlyDone, timeSpent);
+        
+        }
+        
+        else if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).equals(
+                "CONTENT_VIEW")) {
+        
+            
+            
+        }
+        else {
             studentAction = new StudentAction(subSession, dateTime,
                     line.get(CSV_FILE_HEADER.get("LOG_TYPE")),
                     line.get(CSV_FILE_HEADER.get("PROBLEM_ID")),
