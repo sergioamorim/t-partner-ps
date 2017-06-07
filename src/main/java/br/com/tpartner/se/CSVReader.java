@@ -78,7 +78,7 @@ public class CSVReader {
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs.csv", ";", "iso-8859-1");
+        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs-ready.csv", ",", "iso-8859-1");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         reader.run(context, csvMatrix);
         context.close();
@@ -214,6 +214,11 @@ public class CSVReader {
         }
         
         Long studentId = this.getStudentId(studentIdString);
+        
+        if(studentId == null) {
+            return null;
+        }
+        
         Student student;
         student = studentDAO.findById(studentId);
         
