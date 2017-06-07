@@ -18,6 +18,6 @@ public interface EducationalResourceFacade {
     public EducationalResource update(EducationalResource educationalResource);
     public void delete(EducationalResource educationalResource);
     /* Aux */
-    public EducationalResource findById(Integer educationalResourceId);
+    public EducationalResource findById(String educationalResourceId);
     public List<EducationalResource> findAll();
 }
