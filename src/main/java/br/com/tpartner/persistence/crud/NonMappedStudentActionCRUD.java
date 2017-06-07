@@ -18,6 +18,6 @@ public interface NonMappedStudentActionCRUD {
     public NonMappedStudentAction update(NonMappedStudentAction nonMappedStudentAction);
     public void delete(NonMappedStudentAction nonMappedStudentAction);
     /* Aux */
-    public NonMappedStudentAction findById(String nonMappedStudentActionId);
+    public NonMappedStudentAction findById(Integer nonMappedStudentActionId);
     public List<NonMappedStudentAction> findAll();
 }

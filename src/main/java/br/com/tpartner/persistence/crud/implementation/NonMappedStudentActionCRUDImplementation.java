@@ -61,7 +61,7 @@ public class NonMappedStudentActionCRUDImplementation implements NonMappedStuden
     }
 
     @Override
-    public NonMappedStudentAction findById(String nonMappedStudentActionId) {
+    public NonMappedStudentAction findById(Integer nonMappedStudentActionId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(NonMappedStudentAction.class);
         createCriteria.add(Restrictions.eq("id", nonMappedStudentActionId));
