@@ -22,11 +22,12 @@ import javax.persistence.Table;
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
-    @SequenceGenerator(name="student_id_seq",initialValue=1,
-    allocationSize=1,sequenceName="student_id_seq")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="student_id_seq")
     @Column(name = "id")
     private final Long id;
+    
+    public Student(){
+        this.id = new Long(0);
+    }
     
     public Student(Long id){
         this.id = id;
