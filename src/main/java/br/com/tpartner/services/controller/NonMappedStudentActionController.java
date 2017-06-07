@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.NonMappedStudentActionCRUD;
 import br.com.tpartner.persistence.model.NonMappedStudentAction;
+import br.com.tpartner.services.facade.NonMappedStudentActionFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class NonMappedStudentActionController {
+public class NonMappedStudentActionController implements NonMappedStudentActionFacade {
     @Autowired
     NonMappedStudentActionCRUD nonMappedStudentActionCRUD;
     

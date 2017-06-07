@@ -13,7 +13,7 @@ import java.util.List;
  * @author sergio
  */
 public interface ResourceInteractionFacade {
-        /* Client*/
+    /* Client*/
     public ResourceInteraction save(ResourceInteraction resourceInteraction);
     public ResourceInteraction update(ResourceInteraction resourceInteraction);
     public void delete(ResourceInteraction resourceInteraction);
