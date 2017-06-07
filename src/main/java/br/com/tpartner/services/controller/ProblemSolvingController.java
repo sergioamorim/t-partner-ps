@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.ProblemSolvingCRUD;
 import br.com.tpartner.persistence.model.ProblemSolving;
+import br.com.tpartner.services.facade.ProblemSolvingFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class ProblemSolvingController {
+public class ProblemSolvingController implements ProblemSolvingFacade {
     @Autowired
     ProblemSolvingCRUD problemSolvingCRUD;
     

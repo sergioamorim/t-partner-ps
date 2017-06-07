@@ -6,8 +6,12 @@
 package br.com.tpartner.persistence.model;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -18,10 +22,11 @@ import javax.persistence.Table;
 @Table(name = "student")
 public class Student implements Serializable {
     @Id
-    private Long id;
-    
-    public Student(){
-    }
+    @SequenceGenerator(name="student_id_seq",initialValue=1,
+    allocationSize=1,sequenceName="student_id_seq")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="student_id_seq")
+    @Column(name = "id")
+    private final Long id;
     
     public Student(Long id){
         this.id = id;
@@ -29,10 +34,6 @@ public class Student implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
 }

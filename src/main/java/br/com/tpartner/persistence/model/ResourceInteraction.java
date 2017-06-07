@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ResourceInteraction extends StudentAction{
     
-    @Column(name = "educational_resource")
     @ManyToOne
     private final EducationalResource educationalResource;
     

@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
 import br.com.tpartner.persistence.model.ResourceInteraction;
+import br.com.tpartner.services.facade.ResourceInteractionFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class ResourceInteractionController {
+public class ResourceInteractionController implements ResourceInteractionFacade {
     @Autowired
     ResourceInteractionCRUD resourceInteractionCRUD;
     

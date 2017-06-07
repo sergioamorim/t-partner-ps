@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.EducationalResourceCRUD;
 import br.com.tpartner.persistence.model.EducationalResource;
+import br.com.tpartner.services.facade.EducationalResourceFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class EducationalResourceController {
+public class EducationalResourceController implements EducationalResourceFacade {
     @Autowired
     EducationalResourceCRUD educationalResourceCRUD;
     
