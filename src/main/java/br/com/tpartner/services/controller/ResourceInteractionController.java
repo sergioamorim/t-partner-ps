@@ -6,6 +6,7 @@
 package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
+import br.com.tpartner.persistence.model.EducationalResource;
 import br.com.tpartner.persistence.model.ResourceInteraction;
 import br.com.tpartner.services.facade.ResourceInteractionFacade;
 import java.util.List;
@@ -37,5 +38,12 @@ public class ResourceInteractionController implements ResourceInteractionFacade 
 
     public List<ResourceInteraction> findAll() {
         return this.resourceInteractionCRUD.findAll();
+    }
+    
+    public List<ResourceInteraction> findByEducationalResource(
+            EducationalResource educationalResource) {
+        
+        return this.resourceInteractionCRUD.findByEducationalResource(
+                educationalResource);
     }
 }

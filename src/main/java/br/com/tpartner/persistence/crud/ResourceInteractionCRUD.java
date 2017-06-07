@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.persistence.crud;
 
+import br.com.tpartner.persistence.model.EducationalResource;
 import br.com.tpartner.persistence.model.ResourceInteraction;
 import java.util.List;
 
@@ -20,4 +21,7 @@ public interface ResourceInteractionCRUD {
     /* Aux */
     public ResourceInteraction findById(Integer resourceInteractionId);
     public List<ResourceInteraction> findAll();
+    
+    public List<ResourceInteraction> findByEducationalResource(
+            EducationalResource educationalResource);
 }

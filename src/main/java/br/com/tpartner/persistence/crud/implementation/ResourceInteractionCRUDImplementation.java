@@ -6,6 +6,7 @@
 package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
+import br.com.tpartner.persistence.model.EducationalResource;
 import br.com.tpartner.persistence.model.ResourceInteraction;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Repository;
  * @author sergio
  */
 @Repository
-public class ResourceInteractionCRUDImplementation implements ResourceInteractionCRUD {
+public class ResourceInteractionCRUDImplementation
+        implements ResourceInteractionCRUD {
+    
     @Autowired
     private SessionFactory sessionFactory;
     public void setSessionFactory (SessionFactory sessionFactory) {
@@ -63,9 +66,14 @@ public class ResourceInteractionCRUDImplementation implements ResourceInteractio
     @Override
     public ResourceInteraction findById(Integer resourceInteractionId) {
         Session session = getCurrentSession();
-        Criteria createCriteria = session.createCriteria(ResourceInteraction.class);
+        Criteria createCriteria;
+        createCriteria = session.createCriteria(ResourceInteraction.class);
         createCriteria.add(Restrictions.eq("id", resourceInteractionId));
-        ResourceInteraction resourceInteraction = (ResourceInteraction) createCriteria.uniqueResult();
+        
+        ResourceInteraction resourceInteraction;
+        resourceInteraction = (ResourceInteraction)
+                createCriteria.uniqueResult();
+        
         session.close();
         return resourceInteraction;
     }
@@ -73,7 +81,27 @@ public class ResourceInteractionCRUDImplementation implements ResourceInteractio
     @Override
     public List<ResourceInteraction> findAll() {
         Session session = getCurrentSession();
-        List<ResourceInteraction> resourceInteractions = session.createCriteria(ResourceInteraction.class).list();
+        
+        List<ResourceInteraction> resourceInteractions;        
+        resourceInteractions = session.createCriteria(
+                ResourceInteraction.class).list();
+        
+        session.close();
+        return resourceInteractions;
+    }
+    
+    @Override
+    public List<ResourceInteraction> findByEducationalResource(
+            EducationalResource educationalResource) {
+        
+        Session session = getCurrentSession();
+        
+        Criteria createCriteria;
+        createCriteria = session.createCriteria(ResourceInteraction.class);
+        createCriteria.add(Restrictions.eq("educationalResource",
+                                            educationalResource));
+        
+        List<ResourceInteraction> resourceInteractions = createCriteria.list();
         session.close();
         return resourceInteractions;
     }

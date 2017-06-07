@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.services.webservice;
 
+import br.com.tpartner.persistence.model.EducationalResource;
 import br.com.tpartner.persistence.model.ResourceInteraction;
 import br.com.tpartner.services.facade.ResourceInteractionFacade;
 import java.io.Serializable;
@@ -31,25 +32,39 @@ public class ResourceInteractionWebService {
     public String serviceType = "ResourceInteraction Service";
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Serializable> save(@RequestBody ResourceInteraction resourceInteraction) {
-        ResourceInteraction a = this.resourceInteractionFacade.save(resourceInteraction);
+    public @ResponseBody ResponseEntity<Serializable> save(@RequestBody 
+            ResourceInteraction resourceInteraction) {
+        
+        ResourceInteraction a;
+        a = this.resourceInteractionFacade.save(resourceInteraction);
+        
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public @ResponseBody ResponseEntity<Serializable> update(@RequestBody ResourceInteraction resourceInteraction) {
-        ResourceInteraction a = this.resourceInteractionFacade.update(resourceInteraction);
+    public @ResponseBody ResponseEntity<Serializable> update(@RequestBody
+            ResourceInteraction resourceInteraction) {
+        
+        ResourceInteraction a;
+        a = this.resourceInteractionFacade.update(resourceInteraction);
+        
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Integer id) {
-        this.resourceInteractionFacade.delete(this.resourceInteractionFacade.findById(id));
-        return new ResponseEntity<Serializable>(serviceType+": ResourceInteraction deleted",HttpStatus.OK);
+    public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(
+            value = "id", required = true) Integer id) {
+        
+        this.resourceInteractionFacade.delete(this.resourceInteractionFacade.
+                findById(id));
+        
+        return new ResponseEntity<Serializable>(serviceType+
+                ": ResourceInteraction deleted",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Integer id) {
+    public @ResponseBody ResponseEntity<Serializable> findById(
+            @RequestParam(value = "id", required = true) Integer id) {
         ResourceInteraction a = this.resourceInteractionFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }    
@@ -57,5 +72,14 @@ public class ResourceInteractionWebService {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public @ResponseBody List<ResourceInteraction> findAll() {
         return this.resourceInteractionFacade.findAll();
+    }
+    
+    @RequestMapping(value = "/educational_resource",
+            method = RequestMethod.POST)
+    public @ResponseBody List<ResourceInteraction> findByEducationalResource (
+            @RequestBody EducationalResource educationalResource) {
+        
+        return this.resourceInteractionFacade.findByEducationalResource(
+                educationalResource);
     }
 }
