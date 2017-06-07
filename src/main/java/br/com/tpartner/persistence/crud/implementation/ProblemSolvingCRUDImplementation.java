@@ -61,7 +61,7 @@ public class ProblemSolvingCRUDImplementation implements ProblemSolvingCRUD {
     }
 
     @Override
-    public ProblemSolving findById(String problemSolvingId) {
+    public ProblemSolving findById(Integer problemSolvingId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(ProblemSolving.class);
         createCriteria.add(Restrictions.eq("id", problemSolvingId));

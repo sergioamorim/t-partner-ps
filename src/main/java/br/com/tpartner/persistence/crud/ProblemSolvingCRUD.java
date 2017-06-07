@@ -18,6 +18,6 @@ public interface ProblemSolvingCRUD {
     public ProblemSolving update(ProblemSolving problemSolving);
     public void delete(ProblemSolving problemSolving);
     /* Aux */
-    public ProblemSolving findById(String problemSolvingId);
+    public ProblemSolving findById(Integer problemSolvingId);
     public List<ProblemSolving> findAll();
 }
