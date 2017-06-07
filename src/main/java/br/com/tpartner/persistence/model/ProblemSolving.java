@@ -19,6 +19,10 @@ public class ProblemSolving extends ResourceInteraction {
     
     private final Boolean correctlyDone;
     
+    public ProblemSolving() {
+        this.correctlyDone = false;
+    }
+    
     public ProblemSolving(SubSession subSession, Date time,
             EducationalResource educationalResource, Boolean correctlyDone,
             Integer timeSpent) {

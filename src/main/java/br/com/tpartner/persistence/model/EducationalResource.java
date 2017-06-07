@@ -20,6 +20,10 @@ public class EducationalResource implements Serializable {
     @Id
     private final String id;
     
+    public EducationalResource() {
+        this.id = "0";
+    }
+    
     public EducationalResource(String id) {
         this.id = id;
     }

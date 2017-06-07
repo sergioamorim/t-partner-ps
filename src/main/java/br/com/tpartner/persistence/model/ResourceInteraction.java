@@ -23,6 +23,11 @@ public class ResourceInteraction extends StudentAction{
     @Column(name = "time_spent")
     private final Integer timeSpent;
     
+    public ResourceInteraction(){
+        this.educationalResource = new EducationalResource();
+        this.timeSpent = 0;
+    }
+    
     public ResourceInteraction(SubSession subSession, Date time, EducationalResource educationalResource, Integer timeSpent) {
         super(subSession, time);
         this.educationalResource = educationalResource;

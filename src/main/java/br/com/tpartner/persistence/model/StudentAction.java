@@ -39,6 +39,11 @@ public class StudentAction implements Serializable {
     @Column(name = "date_time")
     private final Date time;
     
+    public StudentAction() {
+        this.subSession = new SubSession();
+        this.time = new Date();
+    }
+    
     public StudentAction(SubSession subSession, Date time) {
         this.subSession = subSession;
         this.time = time;

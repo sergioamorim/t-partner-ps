@@ -73,7 +73,7 @@ public class NonMappedStudentAction extends StudentAction {
 
     @Column(name = "activity_loop_id")
     private final String activityLoopId;
-
+    
     public NonMappedStudentAction(SubSession subSession, Date time,
             String type, String lGoalCurriculum, String lGoalValue,
             String dGoalDomain, String dGoalValue, String gamificationLevel,
@@ -102,6 +102,28 @@ public class NonMappedStudentAction extends StudentAction {
         this.pbeNumBlank = pbeNumBlank;
         this.pbeNumWrong = pbeNumWorng;
         this.activityLoopId = activityLoopId;
+    }
+
+    public NonMappedStudentAction(){
+        this.type = "none";
+        this.lGoalCurriculum = "none";
+        this.activityLoopId = "none";
+        this.dGoalDomain = "none";
+        this.dGoalValue = "none";
+        this.gamificationLevel = "none";
+        this.lGoalValue = "none";
+        this.numberOfPoints = "none";
+        this.pbeAbilityScore = "none";
+        this.pbeAbsoluteScore = "none";
+        this.pbeNumBlank = "none";
+        this.pbeNumCorrect = "none";
+        this.pbeNumWrong = "none";
+        this.pbeResponseTime = "none";
+        this.rsCompleted = "none";
+        this.rsId = "none";
+        this.rsNCorrect = "none";
+        this.rsNResources = "none";
+        this.rsType = "none";
     }
 
     public String getType() {
