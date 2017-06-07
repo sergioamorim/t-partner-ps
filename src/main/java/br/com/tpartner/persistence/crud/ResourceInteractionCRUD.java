@@ -18,6 +18,6 @@ public interface ResourceInteractionCRUD {
     public ResourceInteraction update(ResourceInteraction resourceInteraction);
     public void delete(ResourceInteraction resourceInteraction);
     /* Aux */
-    public ResourceInteraction findById(String resourceInteractionId);
+    public ResourceInteraction findById(Integer resourceInteractionId);
     public List<ResourceInteraction> findAll();
 }

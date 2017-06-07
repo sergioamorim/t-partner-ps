@@ -61,7 +61,7 @@ public class ResourceInteractionCRUDImplementation implements ResourceInteractio
     }
 
     @Override
-    public ResourceInteraction findById(String resourceInteractionId) {
+    public ResourceInteraction findById(Integer resourceInteractionId) {
         Session session = getCurrentSession();
         Criteria createCriteria = session.createCriteria(ResourceInteraction.class);
         createCriteria.add(Restrictions.eq("id", resourceInteractionId));
