@@ -6,35 +6,80 @@
 package br.com.tpartner.persistence.model;
 
 import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;import javax.persistence.SequenceGenerator;
+;
+import javax.persistence.Temporal;
+import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 
 /**
  *
  * @author sergio
  */
-public class EducationalResourceStats {
+public class EducationalResourceStats implements Serializable {
+    
+    @Id
+    @SequenceGenerator(name = "educational_resource_stats_id_seq",
+            initialValue = 1, allocationSize = 1,
+            sequenceName = "educational_resource_stats_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "educational_resource_stats_id_seq")
+    private Integer id;
+    
+    @OneToOne
     private final EducationalResource educationalResource;
+    
     private Double timeSpentAverage;
     private Integer timeSpentMedian;
-    private Integer maxTimeSpent;
-    private Integer minTimeSpent;
-    private Integer firstQuartile;
-    private Integer thirdQuartile;
-    private Integer interQuartileRange;
-    private Integer totalInteractions;
-    private List<ResourceInteraction> resourceInteractions;
-    private List<ResourceInteraction> outliersInteractions;
+    private final Integer maxTimeSpent;
+    private final Integer minTimeSpent;
+    private final Integer firstQuartile;
+    private final Integer thirdQuartile;
+    private final Integer interQuartileRange;
+    private final Integer totalInteractions;
+    
+    @ManyToOne
+    private final List<ResourceInteraction> resourceInteractions;
+    
+    @ManyToOne
+    private final List<ResourceInteraction> outliersInteractions;
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private final Date generatedTime;
+    
+    public EducationalResourceStats(){
+        maxTimeSpent = IntegerType.ZERO;
+        minTimeSpent = IntegerType.ZERO;
+        firstQuartile = IntegerType.ZERO;
+        thirdQuartile = IntegerType.ZERO;
+        interQuartileRange = IntegerType.ZERO;
+        totalInteractions = IntegerType.ZERO;
+        timeSpentMedian = IntegerType.ZERO;
+        timeSpentAverage = DoubleType.ZERO;
+        resourceInteractions = new ArrayList();
+        outliersInteractions = new ArrayList();
+        generatedTime = new Date(IntegerType.ZERO);
+        educationalResource = new EducationalResource();
+    }
     
     public EducationalResourceStats(EducationalResource educationalResource, 
             ResourceInteractionCRUD resourceInteractionDAO) {
         
+        generatedTime = new Date();
+        
         this.educationalResource = educationalResource;
         
-        this.resourceInteractions = resourceInteractionDAO.findByEducationalResource(
+        resourceInteractions = resourceInteractionDAO.findByEducationalResource(
             educationalResource);
         
         totalInteractions = resourceInteractions.size();
@@ -64,6 +109,7 @@ public class EducationalResourceStats {
         maxTimeSpent = resourceInteractions.get(totalInteractions-1).
                 getTimeSpent();
         
+        timeSpentAverage = DoubleType.ZERO;
         for (ResourceInteraction resourceInteraction : resourceInteractions) {
             timeSpentAverage += resourceInteraction.getTimeSpent();
         }
@@ -122,6 +168,14 @@ public class EducationalResourceStats {
 
     public Integer getTotalInteractions() {
         return totalInteractions;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Date getGeneratedTime() {
+        return generatedTime;
     }
     
 }

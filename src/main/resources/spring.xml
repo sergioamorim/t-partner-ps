@@ -35,6 +35,8 @@
                 <value>br.com.tpartner.persistence.model.NonMappedStudentAction</value>
                 <value>br.com.tpartner.persistence.model.ProblemSolving</value>
                 <value>br.com.tpartner.persistence.model.ResourceInteraction</value>
+                <value>br.com.tpartner.persistence.model.EducationalResourceStats</value>
+                <value>br.com.tpartner.persistence.model.GamingTheSystem</value>
             </list>
 
         </property>
@@ -83,6 +85,14 @@
     <bean id="resourceInteractionCRUD" class="br.com.tpartner.persistence.crud.implementation.ResourceInteractionCRUDImplementation">
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
     </bean>
+    
+    <bean id="educationalResourceStatsCRUD" class="br.com.tpartner.persistence.crud.implementation.EducationalResourceStatsCRUDImplementation">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    
+    <bean id="gamingTheSystemCRUD" class="br.com.tpartner.persistence.crud.implementation.GamingTheSystemCRUDImplementation">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
 
     <bean id="studentActionController" class="br.com.tpartner.services.controller.StudentActionController"/>
     <bean id="subSessionController" class="br.com.tpartner.services.controller.SubSessionController"/>
@@ -92,6 +102,8 @@
     <bean id="nonMappedStudentActionController" class="br.com.tpartner.services.controller.NonMappedStudentActionController"/>
     <bean id="problemSolvingController" class="br.com.tpartner.services.controller.ProblemSolvingController"/>
     <bean id="resourceInteractionController" class="br.com.tpartner.services.controller.ResourceInteractionController"/>
+    <bean id="educationalResourceStatsController" class="br.com.tpartner.services.controller.EducationalResourceStatsController"/>
+    <bean id="gamingTheSystemController" class="br.com.tpartner.services.controller.GamingTheSystemController"/>
 
     <mvc:annotation-driven />
 	

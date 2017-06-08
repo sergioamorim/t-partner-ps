@@ -40,8 +40,8 @@ public class StudentAction implements Serializable {
     private final Date time;
     
     public StudentAction() {
-        this.subSession = new SubSession();
-        this.time = new Date();
+        subSession = new SubSession();
+        time = new Date();
     }
     
     public StudentAction(SubSession subSession, Date time) {

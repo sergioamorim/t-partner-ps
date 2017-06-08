@@ -87,7 +87,6 @@ public class StudentCRUDImplementation implements StudentCRUD {
     @Override
     public List<TrajectorySummary> getSummaries(
             TrajectorySummariesRequest trajectorySummariesRequest){
-        Session session = getCurrentSession();
         List<TrajectorySummary> trajectorySummaries;
         trajectorySummaries = new ArrayList<TrajectorySummary>();
         for (Student student : trajectorySummariesRequest.getStudents()) {
