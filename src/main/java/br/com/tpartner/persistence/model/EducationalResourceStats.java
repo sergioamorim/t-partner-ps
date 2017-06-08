@@ -6,6 +6,7 @@
 package br.com.tpartner.persistence.model;
 
 import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +24,10 @@ public class EducationalResourceStats {
     private Integer minTimeSpent;
     private Integer firstQuartile;
     private Integer thirdQuartile;
+    private Integer interQuartileRange;
+    private Integer totalInteractions;
     private List<ResourceInteraction> resourceInteractions;
+    private List<ResourceInteraction> outliersInteractions;
     
     public EducationalResourceStats(EducationalResource educationalResource, 
             ResourceInteractionCRUD resourceInteractionDAO) {
@@ -33,7 +37,7 @@ public class EducationalResourceStats {
         this.resourceInteractions = resourceInteractionDAO.findByEducationalResource(
             educationalResource);
         
-        Integer totalInteractions = resourceInteractions.size();
+        totalInteractions = resourceInteractions.size();
         Collections.sort(resourceInteractions, new Comparator<ResourceInteraction>(){
             public int compare(ResourceInteraction o1, ResourceInteraction o2){
                return o1.getTimeSpent() - o2.getTimeSpent();
@@ -42,6 +46,7 @@ public class EducationalResourceStats {
         
         firstQuartile = new Double(0.25 * totalInteractions).intValue() + 1;
         thirdQuartile = new Double(0.75 * totalInteractions).intValue() + 1;
+        interQuartileRange = thirdQuartile - firstQuartile;
         
         if (totalInteractions % 2 == IntegerType.ZERO) {
             timeSpentMedian = resourceInteractions.get(
@@ -63,6 +68,16 @@ public class EducationalResourceStats {
             timeSpentAverage += resourceInteraction.getTimeSpent();
         }
         timeSpentAverage /= totalInteractions;
+        
+        outliersInteractions = new ArrayList<ResourceInteraction>();
+        for (int i = 0; i < (firstQuartile - (1.5 * interQuartileRange)); i++) {
+            outliersInteractions.add(resourceInteractions.get(i));
+        }
+        for (int i = (totalInteractions - 1);
+                i > (thirdQuartile + (1.5 * interQuartileRange)); i++) {
+            outliersInteractions.add(resourceInteractions.get(i));
+        }
+        
     }
 
     public EducationalResource getEducationalResource() {
@@ -88,13 +103,25 @@ public class EducationalResourceStats {
     public List<ResourceInteraction> getResourceInteractions() {
         return resourceInteractions;
     }
-
+    
     public Integer getFirstQuartile() {
         return firstQuartile;
     }
-
+    
     public Integer getThirdQuartile() {
         return thirdQuartile;
+    }
+
+    public Integer getInterQuartileRange() {
+        return interQuartileRange;
+    }
+
+    public List<ResourceInteraction> getOutliersInteractions() {
+        return outliersInteractions;
+    }
+
+    public Integer getTotalInteractions() {
+        return totalInteractions;
     }
     
 }
