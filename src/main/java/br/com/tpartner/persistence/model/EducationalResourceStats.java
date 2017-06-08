@@ -9,7 +9,6 @@ import br.com.tpartner.persistence.crud.ResourceInteractionCRUD;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 
 /**
@@ -22,20 +21,17 @@ public class EducationalResourceStats {
     private Integer timeSpentMedian;
     private Integer maxTimeSpent;
     private Integer minTimeSpent;
+    private Integer firstQuartile;
+    private Integer thirdQuartile;
+    private List<ResourceInteraction> resourceInteractions;
     
     public EducationalResourceStats(EducationalResource educationalResource, 
             ResourceInteractionCRUD resourceInteractionDAO) {
         
         this.educationalResource = educationalResource;
         
-        List<ResourceInteraction> resourceInteractions;
-        resourceInteractions = resourceInteractionDAO.findByEducationalResource(
+        this.resourceInteractions = resourceInteractionDAO.findByEducationalResource(
             educationalResource);
-        
-        timeSpentAverage = DoubleType.ZERO;
-        timeSpentMedian = IntegerType.ZERO;
-        minTimeSpent = Integer.MAX_VALUE;
-        maxTimeSpent = Integer.MIN_VALUE;
         
         Integer totalInteractions = resourceInteractions.size();
         Collections.sort(resourceInteractions, new Comparator<ResourceInteraction>(){
@@ -44,7 +40,10 @@ public class EducationalResourceStats {
             }
         });
         
-        if (resourceInteractions.size() % 2 == IntegerType.ZERO) {
+        firstQuartile = new Double(0.25 * totalInteractions).intValue() + 1;
+        thirdQuartile = new Double(0.75 * totalInteractions).intValue() + 1;
+        
+        if (totalInteractions % 2 == IntegerType.ZERO) {
             timeSpentMedian = resourceInteractions.get(
                     totalInteractions/2).getTimeSpent();
             timeSpentMedian += resourceInteractions.get(
@@ -74,33 +73,28 @@ public class EducationalResourceStats {
         return timeSpentAverage;
     }
 
-    public void setTimeSpentAverage(Double timeSpentAverage) {
-        this.timeSpentAverage = timeSpentAverage;
-    }
-
     public Integer getTimeSpentMedian() {
         return timeSpentMedian;
-    }
-
-    public void setTimeSpentMedian(Integer timeSpentMedian) {
-        this.timeSpentMedian = timeSpentMedian;
     }
 
     public Integer getMaxTimeSpent() {
         return maxTimeSpent;
     }
 
-    public void setMaxTimeSpent(Integer maxTimeSpent) {
-        this.maxTimeSpent = maxTimeSpent;
-    }
-
     public Integer getMinTimeSpent() {
         return minTimeSpent;
     }
-
-    public void setMinTimeSpent(Integer minTimeSpent) {
-        this.minTimeSpent = minTimeSpent;
-    }
     
+    public List<ResourceInteraction> getResourceInteractions() {
+        return resourceInteractions;
+    }
+
+    public Integer getFirstQuartile() {
+        return firstQuartile;
+    }
+
+    public Integer getThirdQuartile() {
+        return thirdQuartile;
+    }
     
 }
