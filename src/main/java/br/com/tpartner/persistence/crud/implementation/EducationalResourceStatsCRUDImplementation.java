@@ -5,13 +5,17 @@
  */
 package br.com.tpartner.persistence.crud.implementation;
 
+import br.com.tpartner.persistence.crud.EducationalResourceStatsCRUD;
 import br.com.tpartner.persistence.model.EducationalResourceStats;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author sergio
  */
+@Repository
 public class EducationalResourceStatsCRUDImplementation 
-        extends GenericCRUDImplementation<EducationalResourceStats, Integer> {
+        extends GenericCRUDImplementation<EducationalResourceStats, Integer> 
+        implements EducationalResourceStatsCRUD {
     
 }
