@@ -6,7 +6,6 @@
 package br.com.tpartner.services.webservice;
 
 import br.com.tpartner.persistence.model.EducationalResource;
-import br.com.tpartner.persistence.model.Student;
 import br.com.tpartner.services.facade.EducationalResourceFacade;
 import java.io.Serializable;
 import java.util.List;

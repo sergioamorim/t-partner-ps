@@ -6,7 +6,6 @@
 package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.GenericCRUD;
-import java.io.Serializable;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
