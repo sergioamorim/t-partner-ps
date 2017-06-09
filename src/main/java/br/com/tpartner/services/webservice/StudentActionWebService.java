@@ -33,41 +33,54 @@ public class StudentActionWebService {
     public String serviceType = "StudentAction Service";
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Serializable> save(@RequestBody StudentAction action) {
-        StudentAction a = this.studentActionFacade.save(action);
+    public @ResponseBody ResponseEntity<Serializable> save(
+            @RequestBody StudentAction action) {
+        
+        StudentAction a = studentActionFacade.save(action);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public @ResponseBody ResponseEntity<Serializable> update(@RequestBody StudentAction action) {
-        StudentAction a = this.studentActionFacade.update(action);
+    public @ResponseBody ResponseEntity<Serializable> update(
+            @RequestBody StudentAction action) {
+        
+        StudentAction a = studentActionFacade.update(action);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public @ResponseBody ResponseEntity<Serializable> delete(@RequestParam(value = "id", required = true) Integer id) {
-        this.studentActionFacade.delete(this.studentActionFacade.findById(id));
-        return new ResponseEntity<Serializable>(serviceType+": StudentAction deleted",HttpStatus.OK);
+    public @ResponseBody ResponseEntity<Serializable> delete(
+            @RequestParam(value = "id", required = true) Integer id) {
+        
+        this.studentActionFacade.delete(studentActionFacade.findById(id));
+        
+        return new ResponseEntity<Serializable>(
+                serviceType+": StudentAction deleted",HttpStatus.OK);
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(value = "id", required = true) Integer id) {
-        StudentAction a = this.studentActionFacade.findById(id);
+    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(
+            value = "id", required = true) Integer id) {
+        
+        StudentAction a = studentActionFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
     
     @RequestMapping(value = "/sub_session", method = RequestMethod.GET)
-    public @ResponseBody List<StudentAction> findBySubSession(@RequestParam(value = "subSession", required = true) SubSession subSession) {
-        return this.studentActionFacade.findBySubSession(subSession);
+    public @ResponseBody List<StudentAction> findBySubSession(@RequestParam(
+            value = "subSession", required = true) SubSession subSession) {
+        
+        return studentActionFacade.findBySubSession(subSession);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody List<StudentAction> findAll() {
-        return this.studentActionFacade.findAll();
+        return studentActionFacade.findAll();
     }
     
     @RequestMapping(value = "/gaming_the_system", method = RequestMethod.GET)
-    public @ResponseBody GamingTheSystem getGamingTheSystem() {
-        return this.studentActionFacade.getGamingTheSystem();
+    public @ResponseBody ResponseEntity<Serializable> getGamingTheSystem() {
+        GamingTheSystem a = studentActionFacade.getGamingTheSystem();
+        return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
 }
