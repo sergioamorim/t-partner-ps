@@ -7,6 +7,7 @@ package br.com.tpartner.services.controller;
 
 import br.com.tpartner.persistence.crud.GamingTheSystemCRUD;
 import br.com.tpartner.persistence.model.GamingTheSystem;
+import br.com.tpartner.services.facade.GamingTheSystemFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author sergio
  */
-public class GamingTheSystemController {
+public class GamingTheSystemController implements GamingTheSystemFacade {
     @Autowired
     GamingTheSystemCRUD gamingTheSystemCRUD;
     
