@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface GenericCRUD<T, ID> {
+public abstract interface GenericCRUD<T, ID> {
     public T save(T entity);
     public T update(T entity);
     public void delete(T entity);
