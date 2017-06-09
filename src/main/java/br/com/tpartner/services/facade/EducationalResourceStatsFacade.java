@@ -6,16 +6,11 @@
 package br.com.tpartner.services.facade;
 
 import br.com.tpartner.persistence.model.EducationalResourceStats;
-import java.util.List;
 
 /**
  *
  * @author sergio
  */
-public interface EducationalResourceStatsFacade {
-    public EducationalResourceStats save(EducationalResourceStats educationalResourceStats);
-    public EducationalResourceStats update(EducationalResourceStats educationalResourceStats);
-    public void delete(EducationalResourceStats educationalResourceStats);
-    public EducationalResourceStats findById(Integer educationalResourceStatsId);
-    public List<EducationalResourceStats> findAll();
+public interface EducationalResourceStatsFacade
+        extends GenericFacade<EducationalResourceStats, Integer> {
 }
