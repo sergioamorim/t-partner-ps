@@ -16,6 +16,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
+import br.com.tpartner.persistence.model.GamingTheSystem;
 
 /**
  *
@@ -87,5 +88,10 @@ public class StudentActionCRUDImplementation implements StudentActionCRUD {
         List<StudentAction> actions = session.createCriteria(StudentAction.class).list();
         session.close();
         return actions;
+    }
+    
+    @Override
+    public GamingTheSystem getGamingTheSystem() {
+        return new GamingTheSystem();
     }
 }

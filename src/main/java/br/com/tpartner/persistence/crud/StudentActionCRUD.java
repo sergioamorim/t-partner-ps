@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.persistence.crud;
 
+import br.com.tpartner.persistence.model.GamingTheSystem;
 import br.com.tpartner.persistence.model.StudentAction;
 import br.com.tpartner.persistence.model.SubSession;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface StudentActionCRUD {
     public StudentAction findById(Integer actionId);
     public List<StudentAction> findBySubSession(SubSession subSession);
     public List<StudentAction> findAll();
+    
+    public GamingTheSystem getGamingTheSystem();
 }

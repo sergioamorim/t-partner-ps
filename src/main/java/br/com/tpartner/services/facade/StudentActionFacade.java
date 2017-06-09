@@ -5,6 +5,7 @@
  */
 package br.com.tpartner.services.facade;
 
+import br.com.tpartner.persistence.model.GamingTheSystem;
 import br.com.tpartner.persistence.model.SubSession;
 import br.com.tpartner.persistence.model.StudentAction;
 import java.util.List;
@@ -22,4 +23,6 @@ public interface StudentActionFacade {
     public StudentAction findById(Integer actionId);
     public List<StudentAction> findBySubSession(SubSession subSession);
     public List<StudentAction> findAll();
+    
+    public GamingTheSystem getGamingTheSystem();
 }

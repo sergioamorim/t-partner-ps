@@ -12,13 +12,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;import javax.persistence.SequenceGenerator;
-;
-import javax.persistence.Temporal;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 
@@ -28,17 +21,7 @@ import org.hibernate.type.IntegerType;
  */
 public class EducationalResourceStats implements Serializable {
     
-    @Id
-    @SequenceGenerator(name = "educational_resource_stats_id_seq",
-            initialValue = 1, allocationSize = 1,
-            sequenceName = "educational_resource_stats_id_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "educational_resource_stats_id_seq")
-    private Integer id;
-    
-    @OneToOne
     private final EducationalResource educationalResource;
-    
     private Double timeSpentAverage;
     private Integer timeSpentMedian;
     private final Integer maxTimeSpent;
@@ -47,14 +30,8 @@ public class EducationalResourceStats implements Serializable {
     private final Integer thirdQuartile;
     private final Integer interQuartileRange;
     private final Integer totalInteractions;
-    
-    @ManyToOne
     private final List<ResourceInteraction> resourceInteractions;
-    
-    @ManyToOne
     private final List<ResourceInteraction> outliersInteractions;
-    
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private final Date generatedTime;
     
     public EducationalResourceStats(){
@@ -168,10 +145,6 @@ public class EducationalResourceStats implements Serializable {
 
     public Integer getTotalInteractions() {
         return totalInteractions;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public Date getGeneratedTime() {
