@@ -6,6 +6,7 @@
 package br.com.tpartner.persistence.crud.implementation;
 
 import br.com.tpartner.persistence.crud.GenericCRUD;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -23,6 +24,12 @@ public abstract class GenericCRUDImplementation<T, ID>
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public GenericCRUDImplementation() {
+        persistentClass = (Class<T>) ((ParameterizedType) getClass()
+                        .getGenericSuperclass()).getActualTypeArguments()[0];
+    }
+    
     public void setSessionFactory (SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -74,9 +81,10 @@ public abstract class GenericCRUDImplementation<T, ID>
     @Override
     public List<T> findAll() {
         Session session = getCurrentSession();
-        List<T> entitys = session.createCriteria(persistentClass).list();
+        System.out.println(persistentClass);
+        List<T> entities = session.createCriteria(persistentClass).list();
         session.close();
-        return entitys;
+        return entities;
     }
     
 }
