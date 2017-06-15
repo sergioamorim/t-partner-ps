@@ -6,18 +6,11 @@
 package br.com.tpartner.persistence.crud;
 
 import br.com.tpartner.persistence.model.Client;
-import java.util.List;
 
 /**
  *
  * @author sergio
  */
-public interface ClientCRUD {
-    /* Client */
-    public Client save(Client client);
-    public Client update(Client client);
-    public void delete(Client client);
-    /* Aux */
-    public Client findById(Integer clientId);
-    public List<Client> findAll();
+public interface ClientCRUD extends GenericCRUD<Client, Integer> {
+
 }
