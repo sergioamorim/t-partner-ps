@@ -6,18 +6,12 @@
 package br.com.tpartner.persistence.crud;
 
 import br.com.tpartner.persistence.model.NonMappedStudentAction;
-import java.util.List;
 
 /**
  *
  * @author sergio
  */
-public interface NonMappedStudentActionCRUD {
-    /* Client */
-    public NonMappedStudentAction save(NonMappedStudentAction nonMappedStudentAction);
-    public NonMappedStudentAction update(NonMappedStudentAction nonMappedStudentAction);
-    public void delete(NonMappedStudentAction nonMappedStudentAction);
-    /* Aux */
-    public NonMappedStudentAction findById(Integer nonMappedStudentActionId);
-    public List<NonMappedStudentAction> findAll();
+public interface NonMappedStudentActionCRUD
+        extends GenericCRUD<NonMappedStudentAction, Integer> {
+    
 }
