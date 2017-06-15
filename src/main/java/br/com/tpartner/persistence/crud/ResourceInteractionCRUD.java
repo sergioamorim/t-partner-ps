@@ -13,15 +13,10 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface ResourceInteractionCRUD {
-    /* Client */
-    public ResourceInteraction save(ResourceInteraction resourceInteraction);
-    public ResourceInteraction update(ResourceInteraction resourceInteraction);
-    public void delete(ResourceInteraction resourceInteraction);
-    /* Aux */
-    public ResourceInteraction findById(Integer resourceInteractionId);
-    public List<ResourceInteraction> findAll();
+public interface ResourceInteractionCRUD
+        extends GenericCRUD<ResourceInteraction, Integer> {
     
     public List<ResourceInteraction> findByEducationalResource(
             EducationalResource educationalResource);
+    
 }
