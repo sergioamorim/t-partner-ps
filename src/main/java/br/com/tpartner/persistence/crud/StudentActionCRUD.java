@@ -14,15 +14,10 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface StudentActionCRUD {
-    /* Client */
-    public StudentAction save(StudentAction action);
-    public StudentAction update(StudentAction action);
-    public void delete(StudentAction action);
-    /* Aux */
-    public StudentAction findById(Integer actionId);
-    public List<StudentAction> findBySubSession(SubSession subSession);
-    public List<StudentAction> findAll();
+public interface StudentActionCRUD
+        extends GenericCRUD<StudentAction, Integer> {
     
+    public List<StudentAction> findBySubSession(SubSession subSession);    
     public GamingTheSystem getGamingTheSystem();
+    
 }
