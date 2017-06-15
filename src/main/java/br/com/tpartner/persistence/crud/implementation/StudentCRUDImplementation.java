@@ -14,12 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,62 +21,9 @@ import org.springframework.stereotype.Repository;
  * @author sergio
  */
 @Repository
-public class StudentCRUDImplementation implements StudentCRUD {
-    @Autowired
-    private SessionFactory sessionFactory;
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-    public Session getCurrentSession() {
-        return sessionFactory.openSession();
-    }
-    
-    @Override
-    public Student save(Student student) {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        session.save(student);
-        tx.commit();
-        session.close();
-        return student;
-    }
-    
-    @Override
-    public Student update(Student student) {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        session.update(student);
-        tx.commit();
-        session.close();
-        return student;
-    }
-    
-    @Override
-    public void delete(Student student) {
-        Session session = getCurrentSession();
-        Transaction tx = session.beginTransaction();
-        session.delete(student);
-        tx.commit();
-        session.close();
-    }
-
-    @Override
-    public Student findById(Long studentId) {
-        Session session = getCurrentSession();
-        Criteria createCriteria = session.createCriteria(Student.class);
-        createCriteria.add(Restrictions.eq("id", studentId));
-        Student student = (Student) createCriteria.uniqueResult();
-        session.close();
-        return student;
-    }
-
-    @Override
-    public List<Student> findAll() {
-        Session session = getCurrentSession();
-        List<Student> students = session.createCriteria(Student.class).list();
-        session.close();
-        return students;
-    }
+public class StudentCRUDImplementation 
+        extends GenericCRUDImplementation<Student, Long>
+        implements StudentCRUD {
     
     @Override
     public List<TrajectorySummary> getSummaries(
