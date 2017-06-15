@@ -6,18 +6,11 @@
 package br.com.tpartner.persistence.crud;
 
 import br.com.tpartner.persistence.model.ProblemSolving;
-import java.util.List;
-
 /**
  *
  * @author sergio
  */
-public interface ProblemSolvingCRUD {
-    /* Client */
-    public ProblemSolving save(ProblemSolving problemSolving);
-    public ProblemSolving update(ProblemSolving problemSolving);
-    public void delete(ProblemSolving problemSolving);
-    /* Aux */
-    public ProblemSolving findById(Integer problemSolvingId);
-    public List<ProblemSolving> findAll();
+public interface ProblemSolvingCRUD
+        extends GenericCRUD<ProblemSolving, Integer> {
+    
 }
