@@ -26,7 +26,7 @@ public class Client implements Serializable {
     @SequenceGenerator(name="client_id_seq",initialValue=1,
     allocationSize=1,sequenceName="client_id_seq")
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="client_id_seq")
-    private int id;
+    private Integer id;
 
     @Email(message="Invalid email format")
     @Column(name="email")
