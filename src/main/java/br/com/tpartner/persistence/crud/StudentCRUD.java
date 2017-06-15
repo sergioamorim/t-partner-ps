@@ -14,16 +14,10 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface StudentCRUD {
-    /* Client */
-    public Student save(Student student);
-    public Student update(Student student);
-    public void delete(Student student);
-    /* Aux */
-    public Student findById(Long studentId);
-    public List<Student> findAll();
+public interface StudentCRUD extends GenericCRUD<Student, Long> {
 
     public List<TrajectorySummary> getSummaries(
             TrajectorySummariesRequest trajectorySummariesRequest);
+    
 }
 
