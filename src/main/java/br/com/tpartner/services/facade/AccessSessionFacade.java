@@ -13,13 +13,9 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface AccessSessionFacade {
-    /* Client*/
-    public AccessSession save(AccessSession accessSession);
-    public AccessSession update(AccessSession accessSession);
-    public void delete(AccessSession accessSession);
-    /* Aux */
-    public AccessSession findById(Integer accessSessionId);
+public interface AccessSessionFacade
+        extends GenericFacade<AccessSession, Integer> {
+    
     public List<AccessSession> findByStudent(Student student);
-    public List<AccessSession> findAll();
+    
 }
