@@ -13,13 +13,8 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface SubSessionFacade {
-    /* Client*/
-    public SubSession save(SubSession subSession);
-    public SubSession update(SubSession subSession);
-    public void delete(SubSession subSession);
-    /* Aux */
-    public SubSession findById(Integer subSessionId);
+public interface SubSessionFacade extends GenericFacade<SubSession, Integer> {
+    
     public List<SubSession> findByAccessSession(AccessSession accessSession);
-    public List<SubSession> findAll();
+    
 }
