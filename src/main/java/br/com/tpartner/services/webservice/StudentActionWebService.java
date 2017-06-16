@@ -59,11 +59,11 @@ public class StudentActionWebService {
     }
     
     @RequestMapping(method = RequestMethod.GET)
-    public @ResponseBody ResponseEntity<Serializable> findById(@RequestParam(
+    public @ResponseBody ResponseEntity<StudentAction> findById(@RequestParam(
             value = "id", required = true) Integer id) {
         
         StudentAction a = studentActionFacade.findById(id);
-        return new ResponseEntity<Serializable>(a,HttpStatus.OK);
+        return new ResponseEntity<StudentAction>(a,HttpStatus.OK);
     }
     
     @RequestMapping(value = "/sub_session", method = RequestMethod.GET)
