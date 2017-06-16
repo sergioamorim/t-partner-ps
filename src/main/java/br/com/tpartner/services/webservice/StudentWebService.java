@@ -35,21 +35,21 @@ public class StudentWebService {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<Serializable> save(
             @RequestBody Student student) {
-        Student a = this.studentFacade.save(student);
+        Student a = studentFacade.save(student);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public @ResponseBody ResponseEntity<Serializable> update(
             @RequestBody Student student) {
-        Student a = this.studentFacade.update(student);
+        Student a = studentFacade.update(student);
         return new ResponseEntity<Serializable>(a, HttpStatus.OK);
     }
     
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Serializable> delete(
             @RequestParam(value = "id", required = true) Long id) {
-        this.studentFacade.delete(this.studentFacade.findById(id));
+        this.studentFacade.delete(studentFacade.findById(id));
         return new ResponseEntity<Serializable>(
                 serviceType+": Student deleted",HttpStatus.OK);
     }
@@ -57,18 +57,18 @@ public class StudentWebService {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Serializable> findById(
             @RequestParam(value = "id", required = true) Long id) {
-        Student a = this.studentFacade.findById(id);
+        Student a = studentFacade.findById(id);
         return new ResponseEntity<Serializable>(a,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public @ResponseBody List<Student> findAll() {
-        return this.studentFacade.findAll();
+        return studentFacade.findAll();
     }
     
     @RequestMapping(value = "/summary", method = RequestMethod.POST)
     public @ResponseBody List<TrajectorySummary> getSummaries(
             @RequestBody TrajectorySummariesRequest trajectorySummariesRequest){
-        return this.studentFacade.getSummaries(trajectorySummariesRequest);
+        return studentFacade.getSummaries(trajectorySummariesRequest);
     }
 }
