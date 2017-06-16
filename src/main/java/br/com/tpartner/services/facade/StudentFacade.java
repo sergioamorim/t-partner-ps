@@ -14,15 +14,9 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface StudentFacade {
-    /* Client*/
-    public Student save(Student student);
-    public Student update(Student student);
-    public void delete(Student student);
-    /* Aux */
-    public Student findById(Long studentId);
-    public List<Student> findAll();
+public interface StudentFacade extends GenericFacade<Student, Long> {
 
     public List<TrajectorySummary> getSummaries(
             TrajectorySummariesRequest trajectorySummariesRequest);
+    
 }
