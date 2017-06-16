@@ -13,15 +13,10 @@ import java.util.List;
  *
  * @author sergio
  */
-public interface ResourceInteractionFacade {
-    /* Client*/
-    public ResourceInteraction save(ResourceInteraction resourceInteraction);
-    public ResourceInteraction update(ResourceInteraction resourceInteraction);
-    public void delete(ResourceInteraction resourceInteraction);
-    /* Aux */
-    public ResourceInteraction findById(Integer resourceInteractionId);
-    public List<ResourceInteraction> findAll();
+public interface ResourceInteractionFacade 
+        extends GenericFacade<ResourceInteraction, Integer> {
     
     public List<ResourceInteraction> findByEducationalResource(
             EducationalResource educationalResource);
+    
 }
