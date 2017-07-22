@@ -36,12 +36,14 @@ public class TrajectorySummary implements Serializable {
     private Integer studentActionsTotal;
     private Integer contentsRepeated;
     private Integer problemsRepeated;
+    private Double score;
     private Double triesToHitAverage;
     private Double viewsPerContent;
     private Double triesPerProblem;
     private Double problemSolvingAverageTime;
     private Double contentViewAverageTime;
     private Double actionsPerSubSessionAverage;
+    private Double performanceMeasure;
     private String lastLevelReached;
     private List<SubSession> subSessionsTracked;
     private List<StudentAction> studentActionsTracked;
@@ -56,15 +58,16 @@ public class TrajectorySummary implements Serializable {
         this.student = student;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
-        this.hitsTotal = 0;
-        this.failsTotal = 0;
-        this.problemSolvingTotalTime = 0;
-        this.contentViewTotalTime = 0;
-        this.contentsRepeated = 0;
-        this.problemsRepeated = 0;
-        this.newLevelsReached = 0;
-        this.dummyTestQuestionsDone = 0;
-        this.run();
+        score = 0.0;
+        hitsTotal = 0;
+        failsTotal = 0;
+        problemSolvingTotalTime = 0;
+        contentViewTotalTime = 0;
+        contentsRepeated = 0;
+        problemsRepeated = 0;
+        newLevelsReached = 0;
+        dummyTestQuestionsDone = 0;
+        run();
     }
 
     private void run() {
@@ -76,7 +79,7 @@ public class TrajectorySummary implements Serializable {
         accessSessionDAO = context.getBean(AccessSessionCRUD.class);
         
         List<AccessSession> accessSessions;
-        accessSessions = accessSessionDAO.findByStudent(this.student);
+        accessSessions = accessSessionDAO.findByStudent(student);
         
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
         
@@ -84,13 +87,13 @@ public class TrajectorySummary implements Serializable {
         studentActionDAO = context.getBean(StudentActionCRUD.class);
         
         List<SubSession> subSessions = new ArrayList<SubSession>();
-        this.subSessionsTracked = new ArrayList<SubSession>();
-        this.studentActionsTracked = new ArrayList<StudentAction>();
-        this.problemsTried = new ArrayList<EducationalResource>();
-        this.contentsViewed = new ArrayList<EducationalResource>();
-        this.learningGoalsReachedTracked = new ArrayList<String>();
+        subSessionsTracked = new ArrayList<SubSession>();
+        studentActionsTracked = new ArrayList<StudentAction>();
+        problemsTried = new ArrayList<EducationalResource>();
+        contentsViewed = new ArrayList<EducationalResource>();
+        learningGoalsReachedTracked = new ArrayList<String>();
         for (AccessSession accessSession : accessSessions) {
-            if (accessSession.getTimeStart().before(this.timeEnd)) {
+            if (accessSession.getTimeStart().before(timeEnd)) {
                 
                 subSessions.addAll(subSessionDAO.findByAccessSession(
                         accessSession));
@@ -98,8 +101,8 @@ public class TrajectorySummary implements Serializable {
             }
         }
         for (SubSession subSession : subSessions) {
-            if(subSession.getTimeStart().after(this.timeStart) &&
-                    subSession.getTimeStart().before(this.timeEnd)) {
+            if(subSession.getTimeStart().after(timeStart) &&
+                    subSession.getTimeStart().before(timeEnd)) {
                 subSessionsTracked.add(subSession);
                 
                 for (StudentAction studentAction : studentActionDAO.
@@ -110,10 +113,10 @@ public class TrajectorySummary implements Serializable {
                         ProblemSolving problemSolving;
                         problemSolving = (ProblemSolving) studentAction;
                         if(problemSolving.getCorrectlyDone()) {
-                            this.hitsTotal++;
+                            hitsTotal++;
                         }
                         else {
-                            this.failsTotal++;
+                            failsTotal++;
                         }
                         
                         EducationalResource educationalResource =
@@ -123,9 +126,9 @@ public class TrajectorySummary implements Serializable {
                             problemsTried.add(educationalResource);
                         }
                         else {
-                            this.problemsRepeated++;
+                            problemsRepeated++;
                         }
-                        this.problemSolvingTotalTime +=
+                        problemSolvingTotalTime +=
                                 problemSolving.getTimeSpent();
                     }
                     else if (studentAction.getClass() ==
@@ -142,9 +145,9 @@ public class TrajectorySummary implements Serializable {
                             contentsViewed.add(educationalResource);
                         }
                         else {
-                            this.contentsRepeated++;
+                            contentsRepeated++;
                         }
-                        this.contentViewTotalTime +=
+                        contentViewTotalTime +=
                                 resourceInteraction.getTimeSpent();
                     }
                     else {
@@ -156,15 +159,18 @@ public class TrajectorySummary implements Serializable {
                         if (!nonMappedStudentAction.getGamificationLevel().
                                 equals("*")) {
                             
-                            this.newLevelsReached++;
+                            newLevelsReached++;
                             
-                            this.lastLevelReached = 
+                            score += Integer.parseInt(
+                                    nonMappedStudentAction.getNumberOfPoints());
+                            
+                            lastLevelReached = 
                                 nonMappedStudentAction.getGamificationLevel();
                             
                         }
                         else if (nonMappedStudentAction.getType().equals(
                                 "PROBLEM_BASED_EVALUATION")){
-                            this.dummyTestQuestionsDone++;
+                            dummyTestQuestionsDone++;
                         }
                         else if (nonMappedStudentAction.getType().equals(
                                 "LEARNING_GOAL")) {
@@ -175,32 +181,33 @@ public class TrajectorySummary implements Serializable {
                 }
             }
         }
-        this.problemsTriedTotal = this.failsTotal + this.hitsTotal;
-        this.contentsViewedTotal = contentsViewed.size();
+        problemsTriedTotal = failsTotal + hitsTotal;
+        contentsViewedTotal = contentsViewed.size();
         
-        this.triesToHitAverage = 
-                (double) this.problemsTriedTotal / this.hitsTotal;
+        triesToHitAverage = 
+                (double) problemsTriedTotal / hitsTotal;
         
-        this.contentViewAverageTime = 
-                (double) this.contentViewTotalTime / this.contentsViewedTotal;
+        contentViewAverageTime = 
+                (double) contentViewTotalTime / contentsViewedTotal;
         
-        this.problemSolvingAverageTime = 
-                (double) this.problemSolvingTotalTime / this.problemsTriedTotal;
+        problemSolvingAverageTime = 
+                (double) problemSolvingTotalTime / problemsTriedTotal;
         
-        this.viewsPerContent = 
-                (double) (this.contentsRepeated + this.contentsViewedTotal) /
-                    this.contentsViewedTotal;
+        viewsPerContent = 
+                (double) (contentsRepeated + contentsViewedTotal) /
+                    contentsViewedTotal;
         
-        this.triesPerProblem =
-                (double) (this.problemsRepeated + this.problemsTriedTotal) /
-                    this.problemsTriedTotal;
+        triesPerProblem = (double) (problemsRepeated + problemsTriedTotal) /
+                    problemsTriedTotal;
         
-        this.learningGoalsReachedTotal = learningGoalsReachedTracked.size();
-        this.studentActionsTotal = studentActionsTracked.size();
-        this.subSessionsTotal = subSessionsTracked.size();
+        learningGoalsReachedTotal = learningGoalsReachedTracked.size();
+        studentActionsTotal = studentActionsTracked.size();
+        subSessionsTotal = subSessionsTracked.size();
         
-        this.actionsPerSubSessionAverage =
-                (double) this.studentActionsTotal / this.subSessionsTotal;
+        actionsPerSubSessionAverage = 
+                (double) studentActionsTotal / subSessionsTotal;
+        
+        performanceMeasure = (hitsTotal / problemsTriedTotal) * score;
         
         context.close();
     }
@@ -315,6 +322,14 @@ public class TrajectorySummary implements Serializable {
 
     public Date getTimeEnd() {
         return timeEnd;
+    }
+
+    public Double getScore() {
+        return score;
+    }
+
+    public Double getPerformanceMeasure() {
+        return performanceMeasure;
     }
     
 }
