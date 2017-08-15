@@ -26,9 +26,7 @@ import javax.persistence.Temporal;
 @Table(name = "access_session")
 public class AccessSession implements Serializable {
     @Id
-    @SequenceGenerator(name = "access_session_id_seq", initialValue = 1,
-            allocationSize = 1, sequenceName = "access_session_id_seq")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "access_session_id_seq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @JoinColumn(name = "student_id", referencedColumnName = "id")

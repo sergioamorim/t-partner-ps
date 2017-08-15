@@ -23,9 +23,7 @@ import org.hibernate.validator.constraints.Email;
 @Table(name="client")
 public class Client implements Serializable {
     @Id
-    @SequenceGenerator(name="client_id_seq",initialValue=1,
-    allocationSize=1,sequenceName="client_id_seq")
-    @GeneratedValue(strategy=GenerationType.SEQUENCE,generator="client_id_seq")
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     @Email(message="Invalid email format")
