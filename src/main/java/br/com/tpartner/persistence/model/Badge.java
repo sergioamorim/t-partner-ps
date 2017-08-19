@@ -8,7 +8,6 @@ package br.com.tpartner.persistence.model;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 
 /**
  *
@@ -17,25 +16,17 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Badge extends StudentAction {
-    @ManyToOne
-    private final Student student;
     
     @Column(name = "badge_id")
     private final String badgeId;
     
     public Badge(){
-        this.student = new Student();
         this.badgeId = "none";
     }
     
-    public Badge(SubSession subSession, Date time, Student student, String badgeId) {
+    public Badge(SubSession subSession, Date time, String badgeId) {
         super(subSession, time);
-        this.student = student;
         this.badgeId = badgeId;
-    }
-
-    public Student getStudent() {
-        return student;
     }
 
     public String getBadgeId() {

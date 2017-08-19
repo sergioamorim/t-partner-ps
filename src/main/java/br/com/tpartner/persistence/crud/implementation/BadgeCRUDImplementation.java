@@ -24,10 +24,13 @@ public class BadgeCRUDImplementation
         Session session = getCurrentSession();
         
         Criteria createCriteria;
-        createCriteria = session.createCriteria(Badge.class);
-        createCriteria.add(Restrictions.eq("student", student));
-        
+        createCriteria = session.createCriteria(Badge.class);        
         List<Badge> badges = createCriteria.list();
+        for (Badge badge : badges) {
+            if (!badge.getSubSession().getAccessSession().getStudent().equals(student)) {
+                badges.remove(badge);
+            }
+        }
         session.close();
         return badges;
     }
