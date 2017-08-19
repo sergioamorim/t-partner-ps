@@ -70,9 +70,6 @@ public class NonMappedStudentAction extends StudentAction {
 
     @Column(name = "pbe_num_wrong")
     private final String pbeNumWrong;
-
-    @Column(name = "activity_loop_id")
-    private final String activityLoopId;
     
     public NonMappedStudentAction(SubSession subSession, Date time,
             String type, String lGoalCurriculum, String lGoalValue,
@@ -80,8 +77,7 @@ public class NonMappedStudentAction extends StudentAction {
             String numberOfPoints, String rsId, String rsType, String rsCompleted,
             String rsNCorrect, String rsNResources, String pbeResponseTime,
             String pbeAbilityScore, String pbeAbsoluteScore,
-            String pbeNumCorrect, String pbeNumBlank, String pbeNumWorng,
-            String activityLoopId) {
+            String pbeNumCorrect, String pbeNumBlank, String pbeNumWorng) {
         super(subSession, time);
         this.type = type;
         this.lGoalCurriculum = lGoalCurriculum;
@@ -101,13 +97,11 @@ public class NonMappedStudentAction extends StudentAction {
         this.pbeNumCorrect = pbeNumCorrect;
         this.pbeNumBlank = pbeNumBlank;
         this.pbeNumWrong = pbeNumWorng;
-        this.activityLoopId = activityLoopId;
     }
 
     public NonMappedStudentAction(){
         this.type = "none";
         this.lGoalCurriculum = "none";
-        this.activityLoopId = "none";
         this.dGoalDomain = "none";
         this.dGoalValue = "none";
         this.gamificationLevel = "none";
@@ -196,11 +190,6 @@ public class NonMappedStudentAction extends StudentAction {
 
     public String getPbeNumWrong() {
         return pbeNumWrong;
-    }
-
-    public String getActivityLoopId() {
-        return activityLoopId;
-    }
-        
+    }       
         
 }
