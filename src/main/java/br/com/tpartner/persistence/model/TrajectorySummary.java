@@ -207,12 +207,14 @@ public class TrajectorySummary implements Serializable {
         actionsPerSubSessionAverage = 
                 (double) studentActionsTotal / subSessionsTotal;
         if (problemsTriedTotal != 0) {
-            performanceMeasure = (hitsTotal / problemsTriedTotal) * score;
+            performanceMeasure = (double) hitsTotal / problemsTriedTotal;
+            if (score > 0) {
+                performanceMeasure *= score;
+            }
         }
         else {
             performanceMeasure = 0.0;
         }
-        
         context.close();
     }
 
