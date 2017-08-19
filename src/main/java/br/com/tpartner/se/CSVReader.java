@@ -78,7 +78,7 @@ public class CSVReader {
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("/home/sergio/Documents/logs-ready.csv", ",", "iso-8859-1");
+        csvMatrix = reader.getMatrix("C:/Users/sergio/Documents/logs/logs-ready.csv", ",", "iso-8859-1");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         reader.run(context, csvMatrix);
         context.close();
