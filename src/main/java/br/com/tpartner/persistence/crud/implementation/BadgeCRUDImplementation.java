@@ -13,11 +13,13 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author sergio
  */
+@Repository
 public class BadgeCRUDImplementation 
         extends GenericCRUDImplementation<Badge, Integer> implements BadgeCRUD {
     
