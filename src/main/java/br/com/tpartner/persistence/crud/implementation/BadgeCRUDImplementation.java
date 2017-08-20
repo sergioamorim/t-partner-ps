@@ -8,6 +8,7 @@ package br.com.tpartner.persistence.crud.implementation;
 import br.com.tpartner.persistence.crud.BadgeCRUD;
 import br.com.tpartner.persistence.model.Badge;
 import br.com.tpartner.persistence.model.Student;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -26,13 +27,14 @@ public class BadgeCRUDImplementation
         Criteria createCriteria;
         createCriteria = session.createCriteria(Badge.class);        
         List<Badge> badges = createCriteria.list();
+        List<Badge> badgesReturn = new ArrayList<Badge>();
         for (Badge badge : badges) {
-            if (!badge.getSubSession().getAccessSession().getStudent().equals(student)) {
-                badges.remove(badge);
+            if (badge.getSubSession().getAccessSession().getStudent().equals(student)) {
+                badgesReturn.add(badge);
             }
         }
         session.close();
-        return badges;
+        return badgesReturn;
     }
     
     public List<Badge> findByBadgeId (String badgeId) {
