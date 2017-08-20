@@ -6,6 +6,7 @@
 package br.com.tpartner.se;
 
 import br.com.tpartner.persistence.crud.AccessSessionCRUD;
+import br.com.tpartner.persistence.crud.BadgeCRUD;
 import br.com.tpartner.persistence.crud.EducationalResourceCRUD;
 import br.com.tpartner.persistence.crud.StudentCRUD;
 import br.com.tpartner.persistence.model.AccessSession;
@@ -26,6 +27,7 @@ import java.util.Date;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import br.com.tpartner.persistence.crud.StudentActionCRUD;
 import br.com.tpartner.persistence.crud.SubSessionCRUD;
+import br.com.tpartner.persistence.model.Badge;
 import br.com.tpartner.persistence.model.EducationalResource;
 import br.com.tpartner.persistence.model.NonMappedStudentAction;
 import br.com.tpartner.persistence.model.ProblemSolving;
@@ -74,26 +76,50 @@ public class CSVReader {
     };
     
     
-    public static void main(String[] args) throws UnsupportedEncodingException, FileNotFoundException, ParseException {
+    public static void main(String[] args) 
+            throws UnsupportedEncodingException, FileNotFoundException,
+            ParseException {
+        
         CSVReader reader;
         reader = new CSVReader();
         List<List<String>> csvMatrix;
-        csvMatrix = reader.getMatrix("C:/Users/sergio/Documents/logs/logs-ready.csv", ",", "iso-8859-1");
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
+        csvMatrix = reader.getMatrix(
+                "C:/Users/sergio/Documents/logs/logs-ready.csv",
+                ",", "iso-8859-1");
+        
+        ClassPathXmlApplicationContext context;
+        context = new ClassPathXmlApplicationContext("spring.xml");
+        
         reader.run(context, csvMatrix);
         context.close();
         System.out.println("OK");
     }
     
-    private void run(ClassPathXmlApplicationContext context, List<List<String>> csvMatrix) throws ParseException {
+    private void run(ClassPathXmlApplicationContext context,
+            List<List<String>> csvMatrix) throws ParseException {
+        
         StudentCRUD studentDAO = context.getBean(StudentCRUD.class);
+        
         this.createStudents(csvMatrix, studentDAO);
-        AccessSessionCRUD accessSessionDAO = context.getBean(AccessSessionCRUD.class);
+        
+        AccessSessionCRUD accessSessionDAO;
+        accessSessionDAO = context.getBean(AccessSessionCRUD.class);
+        
         this.createAccessSessions(csvMatrix, accessSessionDAO, studentDAO);
+        
         SubSessionCRUD subSessionDAO = context.getBean(SubSessionCRUD.class);
-        StudentActionCRUD studentActionDAO = context.getBean(StudentActionCRUD.class);
-        EducationalResourceCRUD educationalResourceDAO = context.getBean(EducationalResourceCRUD.class);
-        this.createStudentActions(csvMatrix, studentActionDAO, studentDAO, accessSessionDAO, subSessionDAO, educationalResourceDAO);
+        
+        StudentActionCRUD studentActionDAO;
+        studentActionDAO = context.getBean(StudentActionCRUD.class);
+        
+        EducationalResourceCRUD educationalResourceDAO;
+        educationalResourceDAO = context.getBean(EducationalResourceCRUD.class);
+        
+        BadgeCRUD badgeCRUD = context.getBean(BadgeCRUD.class);
+        
+        this.createStudentActions(csvMatrix, studentActionDAO, studentDAO,
+                accessSessionDAO, subSessionDAO, educationalResourceDAO,
+                badgeCRUD);
     }
     
     private SimpleDateFormat getTimestampType(String timeString){
@@ -135,7 +161,7 @@ public class CSVReader {
     
     private StudentAction getStudentAction(List<String> line,
             SubSession subSession,
-            EducationalResourceCRUD educationalResourceDAO)
+            EducationalResourceCRUD educationalResourceDAO, BadgeCRUD badgeDAO)
             throws ParseException {
         
         Date dateTime = getDateTime(line);
@@ -174,6 +200,24 @@ public class CSVReader {
                     educationalResource, timeSpent);
             
         }
+        else if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).equals(
+                "ACTIVITY_LOOP")) {
+            String badgeId = line.get(CSV_FILE_HEADER.get("ACTIVITY_LOOP_ID"));
+            Student student = subSession.getAccessSession().getStudent();
+            List<Badge> badges = badgeDAO.findByStudent(student);
+            Boolean badgeAlreadyWon = false;
+            for (Badge badge : badges) {
+                if (badge.getBadgeId().equals(badgeId)) {
+                    badgeAlreadyWon = true;
+                }
+            }
+            if (!badgeAlreadyWon) {
+                studentAction = new Badge(subSession, dateTime, badgeId);
+            }
+            else {
+                studentAction = null;
+            }
+        }
         else {
             studentAction = new NonMappedStudentAction(subSession, dateTime,
                     line.get(CSV_FILE_HEADER.get("LOG_TYPE")),
@@ -193,8 +237,7 @@ public class CSVReader {
                     line.get(CSV_FILE_HEADER.get("PBE_ABSOLUTE_SCORE")),
                     line.get(CSV_FILE_HEADER.get("PBE_NUM_CORRECT")),
                     line.get(CSV_FILE_HEADER.get("PBE_NUM_BLANK")),
-                    line.get(CSV_FILE_HEADER.get("PBE_NUM_WRONG")),
-                    line.get(CSV_FILE_HEADER.get("ACTIVITY_LOOP_ID"))
+                    line.get(CSV_FILE_HEADER.get("PBE_NUM_WRONG"))
             );
         }
         return studentAction;
@@ -231,36 +274,57 @@ public class CSVReader {
         return student;
     }
     
-    private AccessSession getAccessSession(List<String> line, AccessSessionCRUD accessSessionDAO, Student student) throws ParseException {
+    private AccessSession getAccessSession(List<String> line,
+            AccessSessionCRUD accessSessionDAO, Student student)
+            throws ParseException {
         Date dateTime = getDateTime(line);
-        List<AccessSession> accessSessions = accessSessionDAO.findByStudent(student);
+        List<AccessSession> accessSessions;
+        accessSessions = accessSessionDAO.findByStudent(student);
         return getNearestAccessSession(accessSessions, dateTime);
     }
     
     
-    private void createStudents(List<List<String>> csvMatrix, StudentCRUD studentDAO) {
+    private void createStudents(List<List<String>> csvMatrix,
+            StudentCRUD studentDAO) {
+        
         for (List<String> line : csvMatrix) {
             getStudent(line, studentDAO);
         }
+        
     }
     
-    private void createAccessSessions(List<List<String>> csvMatrix, AccessSessionCRUD accessSessionDAO, StudentCRUD studentDAO) throws ParseException {
+    private void createAccessSessions(List<List<String>> csvMatrix,
+            AccessSessionCRUD accessSessionDAO, StudentCRUD studentDAO)
+            throws ParseException {
         for (List<String> line : csvMatrix) {
-            if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains("USER_SESSION")&&!line.get(CSV_FILE_HEADER.get("STUDENT_ID")).contains("STUDENT_ID")) {
+            
+            if (line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains(
+                    "USER_SESSION")&&!line.get(CSV_FILE_HEADER.get(
+                            "STUDENT_ID")).contains("STUDENT_ID")) {
+                
                 Student student = getStudent(line, studentDAO);
-                AccessSession accessSession = new AccessSession(student, getDateTime(line));
+                
+                AccessSession accessSession;
+                accessSession = new AccessSession(student, getDateTime(line));
+                
                 accessSessionDAO.save(accessSession);
             }
         }
     }
     
-    private AccessSession getNearestAccessSession(List<AccessSession> accessSessions, Date dateTime) {
+    private AccessSession getNearestAccessSession(
+            List<AccessSession> accessSessions, Date dateTime) {
+        
         AccessSession nearestAccessSession = null;
         Integer nearestComparation = Integer.MAX_VALUE;
         for (AccessSession accessSession : accessSessions) {
             if (accessSession.getTimeStart().compareTo(dateTime) >= 0) {
-                if (accessSession.getTimeStart().compareTo(dateTime) < nearestComparation) {
-                    nearestComparation = accessSession.getTimeStart().compareTo(dateTime);
+                if (accessSession.getTimeStart().compareTo(dateTime) <
+                        nearestComparation) {
+                    
+                    nearestComparation =
+                            accessSession.getTimeStart().compareTo(dateTime);
+                    
                     nearestAccessSession = accessSession;
                 }
             }
@@ -268,30 +332,64 @@ public class CSVReader {
         return nearestAccessSession;
     }
     
-    private SubSession getSubSession(List<String> line, SubSessionCRUD subSessionDAO, AccessSession accessSession, StudentActionCRUD studentActionDAO) throws ParseException {
-        List<SubSession> subSessions = subSessionDAO.findByAccessSession(accessSession);
+    private SubSession getSubSession(List<String> line,
+            SubSessionCRUD subSessionDAO, AccessSession accessSession,
+            StudentActionCRUD studentActionDAO) throws ParseException {
+        
+        List<SubSession> subSessions;
+        subSessions = subSessionDAO.findByAccessSession(accessSession);
+        
         for (SubSession subSession : subSessions) {
-            List<StudentAction> studentActions = studentActionDAO.findBySubSession(subSession);
+            
+            List<StudentAction> studentActions;
+            studentActions = studentActionDAO.findBySubSession(subSession);
+            
             for (StudentAction studentAction : studentActions) {
-                Long diff = studentAction.getTime().getTime() - getDateTime(line).getTime();
-                if (diff > -SUB_SESSION_TIME_LIMIT &&  diff < SUB_SESSION_TIME_LIMIT) {
+                
+                Long diff = studentAction.getTime().getTime() 
+                        - getDateTime(line).getTime();
+                
+                if (diff > -SUB_SESSION_TIME_LIMIT &&
+                        diff < SUB_SESSION_TIME_LIMIT) {
+                    
                     return subSession;
+                    
                 }
             }
         }
-        SubSession subSession = new SubSession(getDateTime(line), accessSession);
+        
+        SubSession subSession;
+        subSession = new SubSession(getDateTime(line), accessSession);
+        
         return subSessionDAO.save(subSession);
     }
     
-    private void createStudentActions(List<List<String>> csvMatrix, StudentActionCRUD studentActionDAO, StudentCRUD studentDAO, AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO, EducationalResourceCRUD educationalResourceDAO) throws ParseException{
+    private void createStudentActions(List<List<String>> csvMatrix,
+            StudentActionCRUD studentActionDAO, StudentCRUD studentDAO,
+            AccessSessionCRUD accessSessionDAO, SubSessionCRUD subSessionDAO,
+            EducationalResourceCRUD educationalResourceDAO, BadgeCRUD badgeDAO)
+            throws ParseException{
         for (List<String> line : csvMatrix) {
-            if (!line.get(CSV_FILE_HEADER.get("LOG_TYPE")).contains("USER_SESSION")&&!line.get(CSV_FILE_HEADER.get("STUDENT_ID")).contains("STUDENT_ID")) {
+            if (!line.get(CSV_FILE_HEADER.get(
+                    "LOG_TYPE")).contains("USER_SESSION") && !line.get(
+                            CSV_FILE_HEADER.get("STUDENT_ID")).contains(
+                                    "STUDENT_ID")) {
+                
                 Student student = getStudent(line, studentDAO);
-                AccessSession accessSession = getAccessSession(line, accessSessionDAO, student);
+                
+                AccessSession accessSession = getAccessSession(line,
+                        accessSessionDAO, student);
+                
                 if (accessSession != null) {
-                    SubSession subSession = getSubSession(line, subSessionDAO, accessSession, studentActionDAO);
-                    StudentAction studentAction = getStudentAction(line, subSession, educationalResourceDAO);
-                    studentActionDAO.save(studentAction);
+                    
+                    SubSession subSession = getSubSession(line, subSessionDAO,
+                            accessSession, studentActionDAO);
+                    
+                    StudentAction studentAction = getStudentAction(line,
+                            subSession, educationalResourceDAO, badgeDAO);
+                    if (studentAction != null) {
+                        studentActionDAO.save(studentAction);
+                    }
                 }
             }
         }
@@ -306,7 +404,9 @@ public class CSVReader {
      * @throws UnsupportedEncodingException
      * @throws FileNotFoundException
      */
-    private List<List<String>> getMatrix (String csvFilePath, String csvSeparator, String encoding) throws UnsupportedEncodingException, FileNotFoundException {
+    private List<List<String>> getMatrix (String csvFilePath,
+            String csvSeparator, String encoding) 
+            throws UnsupportedEncodingException, FileNotFoundException {
         
         List<List<String>> csvMatrix;
         csvMatrix = new ArrayList<List<String>>();
@@ -314,7 +414,8 @@ public class CSVReader {
         List<String> csvLineArray;
         
 	BufferedReader reader;
-        reader = new BufferedReader(new InputStreamReader(new FileInputStream(csvFilePath), encoding));
+        reader = new BufferedReader(new InputStreamReader(new FileInputStream(
+                csvFilePath), encoding));
         
         String[] columns;
 	String line;
