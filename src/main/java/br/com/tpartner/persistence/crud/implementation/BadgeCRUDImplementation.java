@@ -31,7 +31,7 @@ public class BadgeCRUDImplementation
         List<Badge> badges = createCriteria.list();
         List<Badge> badgesReturn = new ArrayList<Badge>();
         for (Badge badge : badges) {
-            if (badge.getSubSession().getAccessSession().getStudent().equals(student)) {
+            if (badge.getSubSession().getAccessSession().getStudent().getId().equals(student.getId())) {
                 badgesReturn.add(badge);
             }
         }
