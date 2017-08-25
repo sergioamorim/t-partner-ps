@@ -36,6 +36,7 @@ public class TrajectorySummary implements Serializable {
     private Integer studentActionsTotal;
     private Integer contentsRepeated;
     private Integer problemsRepeated;
+    private Integer badgesTotal;
     private Double score;
     private Double triesToHitAverage;
     private Double viewsPerContent;
@@ -49,6 +50,7 @@ public class TrajectorySummary implements Serializable {
     private List<StudentAction> studentActionsTracked;
     private List<EducationalResource> problemsTried;
     private List<EducationalResource> contentsViewed;
+    private List<Badge> badgesWon;
     private List<String> learningGoalsReachedTracked;
     private final Date timeStart;
     private final Date timeEnd;
@@ -67,6 +69,7 @@ public class TrajectorySummary implements Serializable {
         problemsRepeated = 0;
         newLevelsReached = 0;
         dummyTestQuestionsDone = 0;
+        badgesTotal = 0;
         run();
     }
 
@@ -92,6 +95,7 @@ public class TrajectorySummary implements Serializable {
         problemsTried = new ArrayList<EducationalResource>();
         contentsViewed = new ArrayList<EducationalResource>();
         learningGoalsReachedTracked = new ArrayList<String>();
+        badgesWon = new ArrayList<Badge>();
         for (AccessSession accessSession : accessSessions) {
             if (accessSession.getTimeStart().before(timeEnd)) {
                 
@@ -149,6 +153,10 @@ public class TrajectorySummary implements Serializable {
                         }
                         contentViewTotalTime +=
                                 resourceInteraction.getTimeSpent();
+                    }
+                    else if (studentAction.getClass() == Badge.class) {
+                        badgesWon.add((Badge) studentAction);
+                        badgesTotal++;
                     }
                     else {
                         
@@ -274,6 +282,10 @@ public class TrajectorySummary implements Serializable {
         return problemsRepeated;
     }
 
+    public Integer getBadgesTotal() {
+        return badgesTotal;
+    }
+
     public Double getTriesToHitAverage() {
         return triesToHitAverage;
     }
@@ -318,6 +330,10 @@ public class TrajectorySummary implements Serializable {
         return contentsViewed;
     }
 
+    public List<Badge> getBadgesWon() {
+        return badgesWon;
+    }
+    
     public List<String> getLearningGoalsReachedTracked() {
         return learningGoalsReachedTracked;
     }
